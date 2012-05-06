@@ -4,6 +4,7 @@
  */
 package videolibrary;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -12,46 +13,52 @@ import java.util.Set;
  * @author Andrej
  */
 public class Video {
+    private long id;
     private String title;
-    private Set<String> directors;
-    private Set<String> actors;
+    private List<String> directors;
+    private List<String> actors;
     private int year;
-    private Set<Genre> genres;
-    private Set<String> countries;
+    private List<Genre> genres;
+    private List<String> countries;
 
-    public Video() {
-    }
-
-    public Set<String> getActors() {
+    public List<String> getActors() {
         return actors;
     }
 
-    public void setActors(Set<String> actors) {
+    public void setActors(List<String> actors) {
         this.actors = actors;
     }
 
-    public Set<String> getCountries() {
+    public List<String> getCountries() {
         return countries;
     }
 
-    public void setCountries(Set<String> countries) {
+    public void setCountries(List<String> countries) {
         this.countries = countries;
     }
 
-    public Set<String> getDirectors() {
+    public List<String> getDirectors() {
         return directors;
     }
 
-    public void setDirectors(Set<String> directors) {
+    public void setDirectors(List<String> directors) {
         this.directors = directors;
     }
 
-    public Set<Genre> getGenres() {
+    public List<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(Set<Genre> genres) {
+    public void setGenres(List<Genre> genres) {
         this.genres = genres;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -79,22 +86,7 @@ public class Video {
             return false;
         }
         final Video other = (Video) obj;
-        if (!Objects.equals(this.title, other.title)) {
-            return false;
-        }
-        if (!Objects.equals(this.directors, other.directors)) {
-            return false;
-        }
-        if (!Objects.equals(this.actors, other.actors)) {
-            return false;
-        }
-        if (this.year != other.year) {
-            return false;
-        }
-        if (!Objects.equals(this.genres, other.genres)) {
-            return false;
-        }
-        if (!Objects.equals(this.countries, other.countries)) {
+        if (this.id != other.id) {
             return false;
         }
         return true;
@@ -103,14 +95,9 @@ public class Video {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.title);
-        hash = 97 * hash + Objects.hashCode(this.directors);
-        hash = 97 * hash + Objects.hashCode(this.actors);
-        hash = 97 * hash + this.year;
-        hash = 97 * hash + Objects.hashCode(this.genres);
-        hash = 97 * hash + Objects.hashCode(this.countries);
+        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
         return hash;
     }
-    
-    
+
+      
 }

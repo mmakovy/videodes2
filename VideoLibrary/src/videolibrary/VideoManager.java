@@ -13,12 +13,22 @@ import java.util.List;
 public interface VideoManager {
 
     public void addVideo(Video video);
+    
+    public void deleteVideo(long id);
 
-    public void searchVideoByTitle(String title);
+    public List<Video> getVideoByTitle(String title);
     
     public List<Video> getAllVideos();
-
-    public void exportToOdf(String fileName);
-
-    public void importFromOdf(String fileName);
+    
+    public Video getVideoById(long id);
+    
+    public List<Video> getVideoByYear(int year);
+    
+    public List<Video> getVideoByDirector(String name);
+    
+    public List<Video> getVideoByActor(String name);
+    
+    public List<Video> getVideoByGenre(Genre genre);
+    
+    public List<Video> getVideoByCountry(String country);
 }

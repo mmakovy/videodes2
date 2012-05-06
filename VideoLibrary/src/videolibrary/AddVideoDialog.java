@@ -183,11 +183,11 @@ public class AddVideoDialog extends javax.swing.JDialog {
      */
     public boolean checkValues() {            
         if (titleTextField.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "No title","Empty title", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Empty title","No title", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (directorsTextField.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "No directors","Directors field is empty", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Directors field is empty","No directors", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
