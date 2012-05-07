@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<videos>
+    <video>
+        <title></title>
+        <directors>
+            <director></director>
+        </directors>
+        <actors>
+            <actor></actor>
+        </actors>
+        <year></year>
+        <country></country>
+        <genres>
+            <genre></genre>
+        </genres>
+        <rating></rating>
+    </video>
+</videos>
