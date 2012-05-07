@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<films>
+    <film>
+        <title></title>
+        <directors>
+            <director></director>
+        </directors>
+        <actors>
+            <actor></actor>
+        </actors>
+        <year></year>
+        <country></country>
+        <genres>
+            <genre></genre>
+        </genres>
+        <rating></rating>
+    </film>
+</films>
