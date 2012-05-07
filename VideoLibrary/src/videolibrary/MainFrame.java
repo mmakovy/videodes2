@@ -80,9 +80,13 @@ public class MainFrame extends javax.swing.JFrame {
             validator.validate(new DOMSource(doc));
             System.out.println();
             return true;
-        } catch (IOException | SAXException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             return false;
+          } catch (SAXException ex) {
+              Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+              return false;
+              
           }
     }
     
@@ -311,6 +315,7 @@ public class MainFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        videoTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         scrollPanel.setViewportView(videoTable);
 
         staticLabel.setText("Number of videos: ");
@@ -373,7 +378,7 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 944, Short.MAX_VALUE)
+            .addComponent(scrollPanel)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(staticLabel)
