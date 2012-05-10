@@ -2,10 +2,71 @@
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-<xsd:element name="Videos">
+<xsd:element name="videos">
     <xsd:complexType>
         <xsd:sequence>
-            <xsd:element name="Video" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="video" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="title" minOccurs="1" maxOccurs="1" type="xsd:string"/>
+                        <xsd:element name="directors" minOccurs="0" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="director" type="xsd:string" minOccurs="1"/>
+                                </xsd:sequence>    
+                            </xsd:complexType>    
+                        </xsd:element> 
+                        <xsd:element name="actors" minOccurs="0" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="actor" type="xsd:string" minOccurs="1"/>
+                                </xsd:sequence>    
+                            </xsd:complexType>    
+                        </xsd:element> 
+                        <xsd:element name="year" minOccurs="0" type="xsd:nonNegativeInteger" maxOccurs="1"/>
+                        <xsd:element name="country" minOccurs="0" type="xsd:string" maxOccurs="1"/>
+                        <xsd:element name="genres" minOccurs="1" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="genre" minOccurs="1" maxOccurs="unbounded">
+                                        <xsd:simpleType>
+                                            <xsd:restriction base="xsd:string">
+                                                <xsd:enumeration value="action"/>
+                                                <xsd:enumeration value="adventure"/>
+                                                <xsd:enumeration value="animation"/>
+                                                <xsd:enumeration value="biography"/>
+                                                <xsd:enumeration value="comedy"/>
+                                                <xsd:enumeration value="crime"/>
+                                                <xsd:enumeration value="documentary"/>
+                                                <xsd:enumeration value="drama"/>
+                                                <xsd:enumeration value="family"/>
+                                                <xsd:enumeration value="fantasy"/>
+                                                <xsd:enumeration value="history"/>
+                                                <xsd:enumeration value="horror"/>
+                                                <xsd:enumeration value="music"/>
+                                                <xsd:enumeration value="musical"/>
+                                                <xsd:enumeration value="scifi"/>
+                                                <xsd:enumeration value="romance"/>
+                                                <xsd:enumeration value="sport"/>
+                                                <xsd:enumeration value="thriller"/>
+                                                <xsd:enumeration value="war"/>
+                                                <xsd:enumeration value="western"/>
+                                            </xsd:restriction>
+                                        </xsd:simpleType>     
+                                    </xsd:element>    
+                                </xsd:sequence>    
+                            </xsd:complexType>    
+                        </xsd:element> 
+                        <xsd:element name="rating" minOccurs="0" maxOccurs="1">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:integer">
+                                    <xsd:pattern value="1|2|3|4|5|6|7|8|9|10"/>
+                                </xsd:restriction>    
+                            </xsd:simpleType>
+                        </xsd:element>
+                    </xsd:sequence>    
+                </xsd:complexType>    
+            </xsd:element>    
         </xsd:sequence>
     </xsd:complexType>
 </xsd:element>
