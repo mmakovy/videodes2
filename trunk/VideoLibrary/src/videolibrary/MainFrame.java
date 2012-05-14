@@ -31,6 +31,9 @@ import org.xml.sax.SAXException;
  * @author Andrej
  */
 public class MainFrame extends javax.swing.JFrame {
+    private VideoTableModel tableModel;
+    private VideoManagerImpl videoManagerImpl;
+    
     /**
      * Creates new form MainFrame
      */
@@ -96,6 +99,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (!checkXml()) {
             JOptionPane.showMessageDialog(this, "XML File is not valid","Error", JOptionPane.ERROR_MESSAGE);
         }
+        tableModel = (VideoTableModel) videoTable.getModel();
     }
   
     /**
@@ -241,81 +245,8 @@ public class MainFrame extends javax.swing.JFrame {
         exportToODFButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         toolBar.add(exportToODFButton);
 
-        videoTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "Title", "Director(s)", "Actor(s)", "Year", "Country", "Genre"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        videoTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        videoTable.setModel(new VideoTableModel());
+        videoTable.getTableHeader().setReorderingAllowed(false);
         scrollPanel.setViewportView(videoTable);
 
         staticLabel.setText("Number of videos: ");
@@ -378,7 +309,7 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanel)
+            .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 944, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(staticLabel)
@@ -405,6 +336,11 @@ public class MainFrame extends javax.swing.JFrame {
     private void addVideoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVideoButtonActionPerformed
         AddVideoDialog dialog = new AddVideoDialog(this, true);
         dialog.setVisible(true); 
+        if (dialog.getVideo() != null) {
+            //videoManagerImpl.addVideo(dialog.getVideo());
+            tableModel.addVideo(dialog.getVideo());
+            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        }
     }//GEN-LAST:event_addVideoButtonActionPerformed
 
     private void searchByIdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByIdButtonActionPerformed
