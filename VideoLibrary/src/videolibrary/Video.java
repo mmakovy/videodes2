@@ -5,8 +5,6 @@
 package videolibrary;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  *
@@ -20,6 +18,15 @@ public class Video {
     private int year;
     private List<Genre> genres;
     private List<String> countries;
+    private int rating;
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 
     public List<String> getActors() {
         return actors;

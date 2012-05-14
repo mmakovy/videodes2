@@ -4,22 +4,36 @@
  */
 package videolibrary;
 
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import javax.swing.*;
 
 /**
  *
  * @author Andrej
  */
 public class AddVideoDialog extends javax.swing.JDialog {
-
+    private Video video = null;
     /**
      * Creates new form AddVideoDialog
      */
     public AddVideoDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        initList();
     }
 
+    public void initList() {
+        for (Genre g: Genre.values()) {
+            ((DefaultListModel)(genresListLeft.getModel())).addElement(g);
+        }
+    }
+    
+    public Video getVideo() {
+        return video;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,6 +60,8 @@ public class AddVideoDialog extends javax.swing.JDialog {
         genresListLeft = new javax.swing.JList();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        ratingComboBox = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add movie");
@@ -55,7 +71,11 @@ public class AddVideoDialog extends javax.swing.JDialog {
 
         directorsLabel.setText("Director(s):");
 
+        directorsTextField.setToolTipText("More directors separate with comma");
+
         actorsLabel.setText("Actor(s):");
+
+        actorsTextField.setToolTipText("More authors separate with comma");
 
         yearLabel.setText("Year:");
 
@@ -63,28 +83,29 @@ public class AddVideoDialog extends javax.swing.JDialog {
 
         countryLabel.setText("Country:");
 
-        genresListRight.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { " ", " ", " ", " ", " " };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        countryTextField.setToolTipText("More countries separate with comma");
+
+        genresListRight.setModel(new DefaultListModel());
         genresListRight.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        genresListRight.setMaximumSize(null);
-        genresListRight.setMinimumSize(null);
-        genresListRight.setPreferredSize(null);
         genresListRight.setVisibleRowCount(5);
+        genresListRight.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                genresListRightMouseClicked(evt);
+            }
+        });
         genreScrollPanelRight.setViewportView(genresListRight);
 
         genresLabel.setText("Genres: (click to add)");
 
-        genresListLeft.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "ACTION", "ADVENTURE", "ANIMATION", "BIOGRAPHY", "COMEDY", "CRIME", "DOCUMENTARY", "DRAMA", "FAMILY", "FANTASY", "HISTORY", "HORROR", "MUSIC", "MUSICAL", "MYSTERY", "ROMANCE", "SCIENCE_FICTION", "SPORT", "THRILLER", "WAR", "WESTERN" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        genresListLeft.setModel(new DefaultListModel());
         genresListLeft.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         genresListLeft.setVerifyInputWhenFocusTarget(false);
         genresListLeft.setVisibleRowCount(5);
+        genresListLeft.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                genresListLeftMouseClicked(evt);
+            }
+        });
         genreScrollPanelLeft.setViewportView(genresListLeft);
 
         okButton.setText("OK");
@@ -95,42 +116,55 @@ public class AddVideoDialog extends javax.swing.JDialog {
         });
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Rating:");
+
+        ratingComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(genresLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(genreScrollPanelLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(genreScrollPanelRight, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(titleLabel)
-                            .addComponent(directorsLabel)
-                            .addComponent(actorsLabel)
-                            .addComponent(yearLabel)
-                            .addComponent(countryLabel))
-                        .addGap(34, 34, 34)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(directorsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(titleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(actorsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(yearComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(25, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(58, 58, 58)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(61, 61, 61)
                 .addComponent(okButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(cancelButton)
-                .addGap(91, 91, 91))
+                .addGap(92, 92, 92))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(genreScrollPanelLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(genreScrollPanelRight, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(titleLabel)
+                                    .addComponent(directorsLabel)
+                                    .addComponent(actorsLabel)
+                                    .addComponent(yearLabel)
+                                    .addComponent(countryLabel)
+                                    .addComponent(jLabel1))
+                                .addGap(34, 34, 34)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(directorsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(titleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(actorsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(yearComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ratingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(genresLabel)))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,17 +189,21 @@ public class AddVideoDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(countryLabel)
                     .addComponent(countryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(ratingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addComponent(genresLabel)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(genreScrollPanelLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(genreScrollPanelRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(okButton)
-                    .addComponent(cancelButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(genreScrollPanelRight, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cancelButton)
+                    .addComponent(okButton))
+                .addGap(23, 23, 23))
         );
 
         pack();
@@ -173,15 +211,44 @@ public class AddVideoDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (checkValues()) {
-            
+            video = new Video();
+            video.setTitle(getTitle());
+            video.setDirectors(getTextField(directorsTextField));
+            video.setActors(getTextField(actorsTextField));
+            video.setCountries(getTextField(countryTextField));
+            video.setYear(getInt(yearComboBox));
+            video.setRating(getInt(ratingComboBox));
+            video.setGenres(getGenres());
+            this.dispose();
         }
-        this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
+
+    private void genresListLeftMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_genresListLeftMouseClicked
+        int index = genresListLeft.getSelectedIndex();
+        if (index != -1) {
+            Genre g = (Genre) ((DefaultListModel)(genresListLeft.getModel())).getElementAt(index);
+            ((DefaultListModel)(genresListLeft.getModel())).remove(index);
+            ((DefaultListModel)(genresListRight.getModel())).addElement(g); 
+        }
+    }//GEN-LAST:event_genresListLeftMouseClicked
+
+    private void genresListRightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_genresListRightMouseClicked
+        int index = genresListRight.getSelectedIndex();
+        if (index != -1) {
+            Genre g = (Genre) ((DefaultListModel)(genresListRight.getModel())).getElementAt(index);
+            ((DefaultListModel)(genresListRight.getModel())).remove(index);
+            ((DefaultListModel)(genresListLeft.getModel())).addElement(g); 
+        }
+    }//GEN-LAST:event_genresListRightMouseClicked
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public boolean checkValues() {            
+    public boolean checkValues() {  
         if (titleTextField.getText().equals("")) {
             JOptionPane.showMessageDialog(this, "Empty title","No title", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -190,9 +257,53 @@ public class AddVideoDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Directors field is empty","No directors", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        if (actorsTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Actors field is empty","No actors", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (countryTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Countries field is empty","No coutries", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (genresListRight.getModel().getSize() == 0) {
+            JOptionPane.showMessageDialog(this, "No genres selected","No genres", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         return true;
-        //todo
     }
+    
+    public String getTitle() {
+        return titleTextField.getText();
+    }
+    
+    public List<Genre> getGenres() {
+        List<Genre> temp = new ArrayList<Genre>();
+        for (int i = 0; i < genresListRight.getModel().getSize(); i++) {
+            Genre g = (Genre)((DefaultListModel)genresListRight.getModel()).get(i);
+            temp.add(g);
+        }
+        return temp;
+    }
+    public List<String> getTextField(JTextField tf) {
+        List<String> temp = new ArrayList<String>();
+        String input = tf.getText();
+        String parse[] = input.split(",");
+        for (int i = 0; i < parse.length; i++) {
+            parse[i] = parse[i].trim();
+        }
+        temp.addAll(Arrays.asList(parse));
+        return Collections.unmodifiableList(temp);
+    }
+    
+    public int getInt(JComboBox cb) {
+        int result = 0;
+        try {
+            result = Integer.parseInt((String)cb.getSelectedItem());
+        }
+        catch (NumberFormatException ex) {}
+        return result;
+    }
+    
     public static void main(String args[]) {
         /*
          * Set the Nimbus look and feel
@@ -252,7 +363,9 @@ public class AddVideoDialog extends javax.swing.JDialog {
     private javax.swing.JLabel genresLabel;
     private javax.swing.JList genresListLeft;
     private javax.swing.JList genresListRight;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton okButton;
+    private javax.swing.JComboBox ratingComboBox;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JTextField titleTextField;
     private javax.swing.JComboBox yearComboBox;
