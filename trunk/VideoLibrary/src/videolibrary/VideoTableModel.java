@@ -23,7 +23,7 @@ public class VideoTableModel extends AbstractTableModel {
  
     @Override
     public int getColumnCount() {
-        return 7;
+        return 8;
     }
  
     @Override
@@ -44,6 +44,8 @@ public class VideoTableModel extends AbstractTableModel {
                 return video.getGenres();
             case 6:
                 return video.getRating();
+            case 7:
+                return video.getId();
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
@@ -65,7 +67,9 @@ public String getColumnName(int columnIndex) {
         case 5:
             return "Genre(s)";
         case 6:
-            return "Rating";  
+            return "Rating";
+        case 7:
+            return "Id";
         default:
             throw new IllegalArgumentException("columnIndex");
     }

@@ -7,7 +7,9 @@ package videolibrary;
 import java.util.List;
 
 /**
- *
+ * -------------------------------------------------------------------
+ * AK SA NIC NENAJDE TAK NAMIESTO VIDEA/LISTU VYHADZOVAT NULL
+ * -------------------------------------------------------------------
  * @author Andrej
  */
 public class VideoManagerImpl implements VideoManager {
