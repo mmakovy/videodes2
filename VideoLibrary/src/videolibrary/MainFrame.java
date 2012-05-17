@@ -4,8 +4,10 @@
  */
 package videolibrary;
 
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -100,6 +102,9 @@ public class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "XML File is not valid","Error", JOptionPane.ERROR_MESSAGE);
         }
         tableModel = (VideoTableModel) videoTable.getModel();
+        videoTable.removeColumn(videoTable.getColumn("Id"));
+//        getAllVideosButtonActionPerformed(null);  
+        
     }
   
     /**
@@ -114,8 +119,12 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar = new javax.swing.JToolBar();
         addVideoButton = new javax.swing.JButton();
         jSeparator9 = new javax.swing.JToolBar.Separator();
-        deleteButton = new javax.swing.JButton();
+        deleteVideoButton = new javax.swing.JButton();
+        jSeparator12 = new javax.swing.JToolBar.Separator();
         jSeparator1 = new javax.swing.JToolBar.Separator();
+        getAllVideosButton = new javax.swing.JButton();
+        jSeparator11 = new javax.swing.JToolBar.Separator();
+        jSeparator13 = new javax.swing.JToolBar.Separator();
         searchByIdButton = new javax.swing.JButton();
         jSeparator8 = new javax.swing.JToolBar.Separator();
         searchByTitleButton = new javax.swing.JButton();
@@ -128,8 +137,9 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JToolBar.Separator();
         searchByGenreButton = new javax.swing.JButton();
         jSeparator10 = new javax.swing.JToolBar.Separator();
-        jButton1 = new javax.swing.JButton();
+        searchByCountryButton = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
+        jSeparator14 = new javax.swing.JToolBar.Separator();
         importFromODFButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         exportToODFButton = new javax.swing.JButton();
@@ -144,14 +154,16 @@ public class MainFrame extends javax.swing.JFrame {
         exitMenuButton = new javax.swing.JMenuItem();
         videoMenu = new javax.swing.JMenu();
         addVideoMenuButton = new javax.swing.JMenuItem();
+        deleteVideoMenuButton = new javax.swing.JMenuItem();
+        getAllVideosMenuButton = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem7 = new javax.swing.JMenuItem();
+        searchByIdMenuItem = new javax.swing.JMenuItem();
+        searchByTitleMenuItem = new javax.swing.JMenuItem();
+        searchByDirectorMenuItem = new javax.swing.JMenuItem();
+        searchByActorMenuItem = new javax.swing.JMenuItem();
+        searchByYearMenuItem = new javax.swing.JMenuItem();
+        searchByGenreMenuItem = new javax.swing.JMenuItem();
+        searchByCountryMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Video Library");
@@ -171,12 +183,31 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar.add(addVideoButton);
         toolBar.add(jSeparator9);
 
-        deleteButton.setText("Delete Video");
-        deleteButton.setFocusable(false);
-        deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(deleteButton);
+        deleteVideoButton.setText("Delete Video");
+        deleteVideoButton.setFocusable(false);
+        deleteVideoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteVideoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteVideoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteVideoButtonActionPerformed(evt);
+            }
+        });
+        toolBar.add(deleteVideoButton);
+        toolBar.add(jSeparator12);
         toolBar.add(jSeparator1);
+
+        getAllVideosButton.setText("Get All Movies");
+        getAllVideosButton.setFocusable(false);
+        getAllVideosButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        getAllVideosButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        getAllVideosButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getAllVideosButtonActionPerformed(evt);
+            }
+        });
+        toolBar.add(getAllVideosButton);
+        toolBar.add(jSeparator11);
+        toolBar.add(jSeparator13);
 
         searchByIdButton.setText("Search by Id");
         searchByIdButton.setFocusable(false);
@@ -194,6 +225,11 @@ public class MainFrame extends javax.swing.JFrame {
         searchByTitleButton.setFocusable(false);
         searchByTitleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByTitleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchByTitleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByTitleButtonActionPerformed(evt);
+            }
+        });
         toolBar.add(searchByTitleButton);
         toolBar.add(jSeparator7);
 
@@ -201,6 +237,11 @@ public class MainFrame extends javax.swing.JFrame {
         searchByDirectorButton.setFocusable(false);
         searchByDirectorButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByDirectorButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchByDirectorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByDirectorButtonActionPerformed(evt);
+            }
+        });
         toolBar.add(searchByDirectorButton);
         toolBar.add(jSeparator6);
 
@@ -208,6 +249,11 @@ public class MainFrame extends javax.swing.JFrame {
         searchByActorButton.setFocusable(false);
         searchByActorButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByActorButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchByActorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByActorButtonActionPerformed(evt);
+            }
+        });
         toolBar.add(searchByActorButton);
         toolBar.add(jSeparator5);
 
@@ -215,6 +261,11 @@ public class MainFrame extends javax.swing.JFrame {
         searchByYearButton.setFocusable(false);
         searchByYearButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByYearButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchByYearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByYearButtonActionPerformed(evt);
+            }
+        });
         toolBar.add(searchByYearButton);
         toolBar.add(jSeparator4);
 
@@ -222,15 +273,26 @@ public class MainFrame extends javax.swing.JFrame {
         searchByGenreButton.setFocusable(false);
         searchByGenreButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByGenreButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchByGenreButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByGenreButtonActionPerformed(evt);
+            }
+        });
         toolBar.add(searchByGenreButton);
         toolBar.add(jSeparator10);
 
-        jButton1.setText("Search by Country");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolBar.add(jButton1);
+        searchByCountryButton.setText("Search by Country");
+        searchByCountryButton.setFocusable(false);
+        searchByCountryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        searchByCountryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchByCountryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByCountryButtonActionPerformed(evt);
+            }
+        });
+        toolBar.add(searchByCountryButton);
         toolBar.add(jSeparator2);
+        toolBar.add(jSeparator14);
 
         importFromODFButton.setText("Import from ODF");
         importFromODFButton.setFocusable(false);
@@ -247,6 +309,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         videoTable.setModel(new VideoTableModel());
         videoTable.getTableHeader().setReorderingAllowed(false);
+        videoTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                videoTableMouseMoved(evt);
+            }
+        });
         scrollPanel.setViewportView(videoTable);
 
         staticLabel.setText("Number of videos: ");
@@ -274,30 +341,86 @@ public class MainFrame extends javax.swing.JFrame {
         videoMenu.setText("Video");
 
         addVideoMenuButton.setText("Add Video");
+        addVideoMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addVideoMenuButtonActionPerformed(evt);
+            }
+        });
         videoMenu.add(addVideoMenuButton);
+
+        deleteVideoMenuButton.setText("Delete Video");
+        deleteVideoMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteVideoMenuButtonActionPerformed(evt);
+            }
+        });
+        videoMenu.add(deleteVideoMenuButton);
+
+        getAllVideosMenuButton.setText("Get All Videos");
+        getAllVideosMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getAllVideosMenuButtonActionPerformed(evt);
+            }
+        });
+        videoMenu.add(getAllVideosMenuButton);
 
         jMenu1.setText("Search by ...");
 
-        jMenuItem1.setText("Id");
-        jMenu1.add(jMenuItem1);
+        searchByIdMenuItem.setText("Id");
+        searchByIdMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByIdMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(searchByIdMenuItem);
 
-        jMenuItem2.setText("Title");
-        jMenu1.add(jMenuItem2);
+        searchByTitleMenuItem.setText("Title");
+        searchByTitleMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByTitleMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(searchByTitleMenuItem);
 
-        jMenuItem3.setText("Director");
-        jMenu1.add(jMenuItem3);
+        searchByDirectorMenuItem.setText("Director");
+        searchByDirectorMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByDirectorMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(searchByDirectorMenuItem);
 
-        jMenuItem4.setText("Actor");
-        jMenu1.add(jMenuItem4);
+        searchByActorMenuItem.setText("Actor");
+        searchByActorMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByActorMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(searchByActorMenuItem);
 
-        jMenuItem5.setText("Year");
-        jMenu1.add(jMenuItem5);
+        searchByYearMenuItem.setText("Year");
+        searchByYearMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByYearMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(searchByYearMenuItem);
 
-        jMenuItem6.setText("Genre");
-        jMenu1.add(jMenuItem6);
+        searchByGenreMenuItem.setText("Genre");
+        searchByGenreMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByGenreMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(searchByGenreMenuItem);
 
-        jMenuItem7.setText("Country");
-        jMenu1.add(jMenuItem7);
+        searchByCountryMenuItem.setText("Country");
+        searchByCountryMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByCountryMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(searchByCountryMenuItem);
 
         videoMenu.add(jMenu1);
 
@@ -309,14 +432,14 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 944, Short.MAX_VALUE)
+            .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 979, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(staticLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(numberOfVideosLabel)
-                .addContainerGap())
-            .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(866, Short.MAX_VALUE))
+            .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -337,20 +460,190 @@ public class MainFrame extends javax.swing.JFrame {
         AddVideoDialog dialog = new AddVideoDialog(this, true);
         dialog.setVisible(true); 
         if (dialog.getVideo() != null) {
-            //videoManagerImpl.addVideo(dialog.getVideo());
+//            videoManagerImpl.addVideo(dialog.getVideo());
             tableModel.addVideo(dialog.getVideo());
             numberOfVideosLabel.setText("" + tableModel.getRowCount());
         }
     }//GEN-LAST:event_addVideoButtonActionPerformed
 
     private void searchByIdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByIdButtonActionPerformed
-        SearchVideoDialog dialog = new SearchVideoDialog(this, true);
+        SearchNumberDialog dialog = new SearchNumberDialog(this, true);
+        dialog.setText("id");
         dialog.setVisible(true); 
+        if (dialog.getResult() != -1) {
+            Video video = videoManagerImpl.getVideoById(dialog.getResult());
+            if (video != null) {
+                tableModel.removeAll();
+                tableModel.addVideo(video);
+                numberOfVideosLabel.setText("" + tableModel.getRowCount());
+            }
+        }
     }//GEN-LAST:event_searchByIdButtonActionPerformed
 
     private void exitMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuButtonActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuButtonActionPerformed
+
+    private void videoTableMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_videoTableMouseMoved
+        Point p = evt.getPoint(); 
+        int row = videoTable.rowAtPoint(p);
+        int column = videoTable.columnAtPoint(p);
+        videoTable.setToolTipText(String.valueOf(tableModel.getValueAt(row,column)));
+    }//GEN-LAST:event_videoTableMouseMoved
+
+    private void addVideoMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVideoMenuButtonActionPerformed
+        addVideoButtonActionPerformed(evt);
+    }//GEN-LAST:event_addVideoMenuButtonActionPerformed
+
+    private void searchByIdMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByIdMenuItemActionPerformed
+        searchByIdButtonActionPerformed(evt);
+    }//GEN-LAST:event_searchByIdMenuItemActionPerformed
+
+    private void searchByTitleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByTitleMenuItemActionPerformed
+        searchByTitleButtonActionPerformed(evt);
+    }//GEN-LAST:event_searchByTitleMenuItemActionPerformed
+
+    private void searchByDirectorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByDirectorMenuItemActionPerformed
+        searchByDirectorButtonActionPerformed(evt);
+    }//GEN-LAST:event_searchByDirectorMenuItemActionPerformed
+
+    private void searchByActorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByActorMenuItemActionPerformed
+        searchByActorButtonActionPerformed(evt);
+    }//GEN-LAST:event_searchByActorMenuItemActionPerformed
+
+    private void searchByYearMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByYearMenuItemActionPerformed
+        searchByYearButtonActionPerformed(evt);
+    }//GEN-LAST:event_searchByYearMenuItemActionPerformed
+
+    private void searchByGenreMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByGenreMenuItemActionPerformed
+        searchByGenreButtonActionPerformed(evt);
+    }//GEN-LAST:event_searchByGenreMenuItemActionPerformed
+
+    private void searchByCountryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByCountryMenuItemActionPerformed
+        searchByCountryButtonActionPerformed(evt);
+    }//GEN-LAST:event_searchByCountryMenuItemActionPerformed
+
+    private void searchByTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByTitleButtonActionPerformed
+        SearchStringDialog dialog = new SearchStringDialog(this, true);
+        dialog.setText("title");
+        dialog.setVisible(true);
+        if (dialog.getResult() != null) {
+//            List<Video> temp = videoManagerImpl.getVideoByTitle(dialog.getResult());
+//            tableModel.removeAll();
+//            if (temp != null) {
+//                for (Video v: temp) {
+//                    tableModel.addVideo(v);
+//                }
+//            }
+            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        }
+    }//GEN-LAST:event_searchByTitleButtonActionPerformed
+
+    private void searchByDirectorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByDirectorButtonActionPerformed
+        SearchStringDialog dialog = new SearchStringDialog(this, true);
+        dialog.setText("director");
+        dialog.setVisible(true);
+        if (dialog.getResult() != null) {
+//            List<Video> temp = videoManagerImpl.getVideoByDirector(dialog.getResult());
+//            tableModel.removeAll();
+//            if (temp != null) {
+//                for (Video v: temp) {
+//                    tableModel.addVideo(v);
+//                }
+//            }
+            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        }
+    }//GEN-LAST:event_searchByDirectorButtonActionPerformed
+
+    private void searchByActorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByActorButtonActionPerformed
+        SearchStringDialog dialog = new SearchStringDialog(this, true);
+        dialog.setText("actor");
+        dialog.setVisible(true);
+        if (dialog.getResult() != null) {
+//            List<Video> temp = videoManagerImpl.getVideoByActor(dialog.getResult());
+//            tableModel.removeAll();
+//            if (temp != null) {
+//                for (Video v: temp) {
+//                    tableModel.addVideo(v);
+//                }
+//            }
+            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        }
+    }//GEN-LAST:event_searchByActorButtonActionPerformed
+
+    private void searchByYearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByYearButtonActionPerformed
+        SearchNumberDialog dialog = new SearchNumberDialog(this, true);
+        dialog.setText("year");
+        dialog.setVisible(true); 
+        if (dialog.getResult() != -1) {
+//            List<Video> temp = videoManagerImpl.getVideoByYear((int)dialog.getResult());
+//            tableModel.removeAll();
+//            if (temp != null) {
+//               for (Video v: temp) {
+//                  tableModel.addVideo(v);
+//            }
+//            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        }
+    }//GEN-LAST:event_searchByYearButtonActionPerformed
+
+    private void searchByGenreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByGenreButtonActionPerformed
+        GenreDialog dialog = new GenreDialog(this, true);
+        dialog.setVisible(true); 
+//        if (dialog.getGenres().size() > 0) {
+//            for (Genre g: dialog.getGenres()) {
+//                List<Video> temp = videoManagerImpl.getVideoByGenre(g);
+//                if (temp != null) {
+//                    for (Video v: temp) {
+//                        tableModel.addVideo(v);
+//                    }
+//                }
+//            }
+//        }
+    }//GEN-LAST:event_searchByGenreButtonActionPerformed
+
+    private void searchByCountryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByCountryButtonActionPerformed
+        SearchStringDialog dialog = new SearchStringDialog(this, true);
+        dialog.setText("country");
+        dialog.setVisible(true);
+        if (dialog.getResult() != null) {
+//            List<Video> temp = videoManagerImpl.getVideoByCountry(dialog.getResult());
+//            tableModel.removeAll();
+//            if (temp != null) {
+//                for (Video v: temp) {
+//                    tableModel.addVideo(v);
+//                }
+//            }
+            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        }
+    }//GEN-LAST:event_searchByCountryButtonActionPerformed
+
+    private void deleteVideoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteVideoButtonActionPerformed
+        if (videoTable.getSelectedRow() != -1) {
+//            videoManagerImpl.deleteVideo((long)(tableModel.getValueAt(videoTable.getSelectedRow(), 8)));
+            tableModel.removeVideo(videoTable.getSelectedRow());
+            tableModel.fireTableDataChanged();
+            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        }
+    }//GEN-LAST:event_deleteVideoButtonActionPerformed
+
+    private void getAllVideosButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getAllVideosButtonActionPerformed
+        List<Video> temp = videoManagerImpl.getAllVideos();
+        tableModel.removeAll();
+//        if (temp != null) {
+//            for (Video v: temp) {
+//                 tableModel.addVideo(v);
+//            }
+//        }
+        numberOfVideosLabel.setText("" + tableModel.getRowCount());
+    }//GEN-LAST:event_getAllVideosButtonActionPerformed
+
+    private void deleteVideoMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteVideoMenuButtonActionPerformed
+        deleteVideoButtonActionPerformed(evt);
+    }//GEN-LAST:event_deleteVideoMenuButtonActionPerformed
+
+    private void getAllVideosMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getAllVideosMenuButtonActionPerformed
+        getAllVideosButtonActionPerformed(evt);
+    }//GEN-LAST:event_getAllVideosMenuButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -396,24 +689,23 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addVideoButton;
     private javax.swing.JMenuItem addVideoMenuButton;
-    private javax.swing.JButton deleteButton;
+    private javax.swing.JButton deleteVideoButton;
+    private javax.swing.JMenuItem deleteVideoMenuButton;
     private javax.swing.JMenuItem exitMenuButton;
     private javax.swing.JButton exportToODFButton;
     private javax.swing.JMenuItem exportToODFMenuButton;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JButton getAllVideosButton;
+    private javax.swing.JMenuItem getAllVideosMenuButton;
     private javax.swing.JButton importFromODFButton;
     private javax.swing.JMenuItem importFromODFMenuButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator10;
+    private javax.swing.JToolBar.Separator jSeparator11;
+    private javax.swing.JToolBar.Separator jSeparator12;
+    private javax.swing.JToolBar.Separator jSeparator13;
+    private javax.swing.JToolBar.Separator jSeparator14;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
@@ -426,11 +718,19 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel numberOfVideosLabel;
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JButton searchByActorButton;
+    private javax.swing.JMenuItem searchByActorMenuItem;
+    private javax.swing.JButton searchByCountryButton;
+    private javax.swing.JMenuItem searchByCountryMenuItem;
     private javax.swing.JButton searchByDirectorButton;
+    private javax.swing.JMenuItem searchByDirectorMenuItem;
     private javax.swing.JButton searchByGenreButton;
+    private javax.swing.JMenuItem searchByGenreMenuItem;
     private javax.swing.JButton searchByIdButton;
+    private javax.swing.JMenuItem searchByIdMenuItem;
     private javax.swing.JButton searchByTitleButton;
+    private javax.swing.JMenuItem searchByTitleMenuItem;
     private javax.swing.JButton searchByYearButton;
+    private javax.swing.JMenuItem searchByYearMenuItem;
     private javax.swing.JLabel staticLabel;
     private javax.swing.JToolBar toolBar;
     private javax.swing.JMenu videoMenu;
