@@ -5,13 +5,17 @@
 package videolibrary;
 
 import java.io.File;
+import org.w3c.dom.Document;
 
 /**
  *
- * @author Andrej
+ * @author Matus Makovy
  */
 public interface ImportManagement {
     
     public void importFromOdf(File file);
+    public File unzipper(File file);
+    public Document openXML(File file);
+    public void readXML(Document doc);
    
 }
