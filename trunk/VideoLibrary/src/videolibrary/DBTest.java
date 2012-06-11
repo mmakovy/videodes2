@@ -27,34 +27,35 @@ public class DBTest {
     private static Context context = new Context();
 
     public static void main(final String[] args) throws BaseXException, QueryException, IOException, SAXException {
-/*
-        String a = null;
-        try {
-            a = new org.basex.core.cmd.List().execute(context);
-        } catch (BaseXException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (!a.contains("VideoDes2DB")) {
-            try {
-                BaseXDriver.createCollection(context);
+        /*
+         * String a = null; try { a = new
+         * org.basex.core.cmd.List().execute(context); } catch (BaseXException
+         * ex) { Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE,
+         * null, ex); } if (!a.contains("VideoDes2DB")) { try {
+         * BaseXDriver.createCollection(context);
+         *
+         * } catch (BaseXException ex) {
+         * Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null,
+         * ex); } finally { try { BaseXDriver.closeCollection(context); } catch
+         * (BaseXException ex) {
+         * Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null,
+         * ex); } }
+         *
+         * }
+         */
+        
+        
+        //*******************************************//
+        //IMDB DOWNLOADER, STACI NAPISAT NAZOV FILMU//
+        //*****************************************//
+        ImdbDownloaderImpl imdb = new ImdbDownloaderImpl();
+        imdb.download("Lord of the rings");
 
-            } catch (BaseXException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    BaseXDriver.closeCollection(context);
-                } catch (BaseXException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-        }
-*/
-
-
-
+        
+        //***********************//
+        //RUCNE VYTVARANIE VIDEA//
+        //*********************//        
         VideoManagerImpl manager = new VideoManagerImpl();
-
         Video video = new Video();
         video.setTitle("Titulok filmu");
         video.setYear(2002);
@@ -70,11 +71,14 @@ public class DBTest {
         r2.add(Genre.WESTERN);
         video.setGenres(r2);
         video.setRating(5);
-        //manager.addVideo(video);
+       // manager.addVideo(video);
 
 
 
-
+        //********************//
+        //VYHODNOCOVAC XQUERY//
+        //******************//  
+        //teraz vracia celu DB
 
         BaseXDriver.openCollection(context);
         String result = null;
@@ -82,26 +86,23 @@ public class DBTest {
         result = (new XQuery(
                 "for $doc in collection('VideoDes2DB')"
                 + "return $doc").execute(context));
-
         System.out.println(result);
 
-      
-
-      
 
 
-       
-
+        //****************************//
+        //PREVOD OBJEKTU VIDEO DO XML//
+        //**************************// 
         XStream x = new XStream(new DomDriver());
         x.registerConverter(new VideoConverter());
         x.omitField(Video.class, "id");
         x.alias("video", Video.class);
         String xml = x.toXML(video);
         //System.err.println(XMLValidator.checkXml(xml));
-        
-      
 
-       // new DropDB("VideoDes2DB").execute(context);
+
+
+        // new DropDB("VideoDes2DB").execute(context);
         BaseXDriver.closeCollection(context);
         context.close();
 
