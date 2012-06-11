@@ -1,0 +1,3 @@
+        result2 = (new XQuery(
+                "for $doc in collection('VideoDes2DB')"
+                + "return fn:max(1 ,5, 3)").execute(context));
