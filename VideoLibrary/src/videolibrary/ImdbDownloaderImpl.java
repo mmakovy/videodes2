@@ -102,7 +102,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         String rating = movieTagElement.getAttribute("imdbRating");
         Integer ratingInt = 15;
         try {
-            ratingInt = Integer.parseInt(rating);
+            ratingInt = Integer.parseInt(rating.substring(0, 1));
         } catch (Exception ex) {
             System.err.println("rating is not a number");
         }
@@ -129,7 +129,9 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
          * Setting GENRES
          */
         String genres = movieTagElement.getAttribute("genre");
+
         String[] genresSplited = genres.split(", ");
+
         List<Genre> genresList = new ArrayList();
         for (int i = 0; i < genresSplited.length; i++) {
             switch (genresSplited[i].toLowerCase()) {
@@ -195,7 +197,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
                 case "war":
                     genresList.add(Genre.WAR);
                     break;
-                case "WESTERN":
+                case "western":
                     genresList.add(Genre.WESTERN);
                     break;
                 default:
@@ -204,6 +206,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
             }
 
         }
+        video.setGenres(genresList);
         
         /**
          * Setting COUNTRIES
@@ -211,7 +214,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         List<String> countries= new ArrayList();
         countries.add("Unknown (IMDB API)");
         video.setCountries(countries);
-        
+        //System.err.println(video.getGenres().get(0));
         manager.addVideo(video);
     }
 }
