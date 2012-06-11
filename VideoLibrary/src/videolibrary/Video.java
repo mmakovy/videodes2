@@ -5,13 +5,14 @@
 package videolibrary;
 
 import java.util.List;
+import java.util.Objects;
 
-/**
+/** 
  *
  * @author Andrej
  */
 public class Video {
-    private long id;
+    private int id;
     private String title;
     private List<String> directors;
     private List<String> actors;
@@ -60,13 +61,15 @@ public class Video {
         this.genres = genres;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
+
+
 
     public String getTitle() {
         return title;
@@ -96,15 +99,23 @@ public class Video {
         if (this.id != other.id) {
             return false;
         }
+        if (!Objects.equals(this.title, other.title)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 79 * hash + this.id;
+        hash = 79 * hash + Objects.hashCode(this.title);
         return hash;
     }
+
+
+
+
 
       
 }

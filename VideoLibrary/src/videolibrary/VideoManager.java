@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface VideoManager {
 
-    public void addVideo(Video video);
+    public boolean addVideo(Video video);
     
     public void deleteVideo(long id);
 

@@ -24,6 +24,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import org.basex.core.BaseXException;
+import org.basex.core.Context;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -33,54 +35,54 @@ import org.xml.sax.SAXException;
  * @author Andrej
  */
 public class MainFrame extends javax.swing.JFrame {
+
     private VideoTableModel tableModel;
     private VideoManagerImpl videoManagerImpl;
-    
+    private Context context = new Context();
+
     /**
      * Creates new form MainFrame
      */
-    
     public static boolean checkXml() {
         File file = new File("videolibrary.xml");
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = null;
         try {
             docBuilder = docFactory.newDocumentBuilder();
-        }
-        catch (ParserConfigurationException ex) {
+        } catch (ParserConfigurationException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         if (!(file.exists())) {
-           Document doc = docBuilder.newDocument();
-                
-           Element rootElement = doc.createElement("Videos");
-           doc.appendChild(rootElement);
-                
-           TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	   Transformer transformer = null;
-           try {
-               transformer = transformerFactory.newTransformer();
-           } catch (TransformerConfigurationException ex) {
-               Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-           }
-           DOMSource source = new DOMSource(doc);
-           StreamResult result = new StreamResult(file);
-           try {
-               transformer.transform(source, result);
-           } catch (TransformerException ex) {
-               Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-           }
+            Document doc = docBuilder.newDocument();
+
+            Element rootElement = doc.createElement("Videos");
+            doc.appendChild(rootElement);
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = null;
+            try {
+                transformer = transformerFactory.newTransformer();
+            } catch (TransformerConfigurationException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(file);
+            try {
+                transformer.transform(source, result);
+            } catch (TransformerException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return true;
         }
-        
+
         try {
             Document doc = docBuilder.parse(file);
-        
+
             String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
             SchemaFactory factory = SchemaFactory.newInstance(language);
             Schema schema = factory.newSchema(new File("videoXmlSchema.xsd"));
-            
+
             Validator validator = schema.newValidator();
             validator.validate(new DOMSource(doc));
             System.out.println();
@@ -88,25 +90,49 @@ public class MainFrame extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             return false;
-          } catch (SAXException ex) {
-              Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-              return false;
-              
-          }
+        } catch (SAXException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+
+        }
     }
-    
-    
+
     public MainFrame() {
         initComponents();
-        if (!checkXml()) {
-            JOptionPane.showMessageDialog(this, "XML File is not valid","Error", JOptionPane.ERROR_MESSAGE);
-        }
+        //if (!checkXml()) {
+        //    JOptionPane.showMessageDialog(this, "XML File is not valid", "Error", JOptionPane.ERROR_MESSAGE);
+       // }
         tableModel = (VideoTableModel) videoTable.getModel();
         videoTable.removeColumn(videoTable.getColumn("Id"));
-//        getAllVideosButtonActionPerformed(null);  
-        
+        videoManagerImpl = new VideoManagerImpl();
+
+        String a = null;
+        try {
+            a = new org.basex.core.cmd.List().execute(context);
+        } catch (BaseXException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (!a.contains("VideoDes2DB")) {
+            try {
+                BaseXDriver.createCollection(context);
+                
+            } catch (BaseXException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    BaseXDriver.closeCollection(context);
+                } catch (BaseXException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        }
+
+
+
     }
-  
+    //        getAllVideosButtonActionPerformed(null);
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -458,18 +484,18 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addVideoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVideoButtonActionPerformed
         AddVideoDialog dialog = new AddVideoDialog(this, true);
-        dialog.setVisible(true); 
+        dialog.setVisible(true);
         if (dialog.getVideo() != null) {
-//            videoManagerImpl.addVideo(dialog.getVideo());
-            tableModel.addVideo(dialog.getVideo());
+            tableModel.addVideo(dialog.getVideo()); // !!! *** !!! Nezabudni to nepridavat ak je envalidne XML !!! *** !!! \\
             numberOfVideosLabel.setText("" + tableModel.getRowCount());
+            if (!videoManagerImpl.addVideo(dialog.getVideo())) JOptionPane.showMessageDialog(this, "XML is not valid","XML not valid", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_addVideoButtonActionPerformed
 
     private void searchByIdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByIdButtonActionPerformed
         SearchNumberDialog dialog = new SearchNumberDialog(this, true);
         dialog.setText("id");
-        dialog.setVisible(true); 
+        dialog.setVisible(true);
         if (dialog.getResult() != -1) {
             Video video = videoManagerImpl.getVideoById(dialog.getResult());
             if (video != null) {
@@ -485,10 +511,10 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuButtonActionPerformed
 
     private void videoTableMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_videoTableMouseMoved
-        Point p = evt.getPoint(); 
+        Point p = evt.getPoint();
         int row = videoTable.rowAtPoint(p);
         int column = videoTable.columnAtPoint(p);
-        videoTable.setToolTipText(String.valueOf(tableModel.getValueAt(row,column)));
+        videoTable.setToolTipText(String.valueOf(tableModel.getValueAt(row, column)));
     }//GEN-LAST:event_videoTableMouseMoved
 
     private void addVideoMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVideoMenuButtonActionPerformed
@@ -574,7 +600,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void searchByYearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByYearButtonActionPerformed
         SearchNumberDialog dialog = new SearchNumberDialog(this, true);
         dialog.setText("year");
-        dialog.setVisible(true); 
+        dialog.setVisible(true);
         if (dialog.getResult() != -1) {
 //            List<Video> temp = videoManagerImpl.getVideoByYear((int)dialog.getResult());
 //            tableModel.removeAll();
@@ -588,7 +614,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void searchByGenreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByGenreButtonActionPerformed
         GenreDialog dialog = new GenreDialog(this, true);
-        dialog.setVisible(true); 
+        dialog.setVisible(true);
 //        if (dialog.getGenres().size() > 0) {
 //            for (Genre g: dialog.getGenres()) {
 //                List<Video> temp = videoManagerImpl.getVideoByGenre(g);
