@@ -64,7 +64,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
      * @param doc 
      */
     @Override
-    public void readOnlineXML(Document doc) {
+    public boolean readOnlineXML(Document doc) {
         
         VideoManager manager = new VideoManagerImpl();
 
@@ -80,6 +80,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         if (rootElement.getAttribute("response") == "False" ){
             log.error("Movie wasn't found.");
             System.err.println("The movie wasn't found");
+            return false;
         }
 
         NodeList movieTags = doc.getElementsByTagName("movie");
@@ -235,5 +236,6 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
          */
 
         manager.addVideo(video);
+        return true;
     }
 }
