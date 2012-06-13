@@ -336,7 +336,7 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar.add(jSeparator2);
         toolBar.add(jSeparator14);
 
-        importFromODFButton.setText("Import from ODF");
+        importFromODFButton.setText("Import from ODS");
         importFromODFButton.setFocusable(false);
         importFromODFButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         importFromODFButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -348,7 +348,7 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar.add(importFromODFButton);
         toolBar.add(jSeparator3);
 
-        exportToODFButton.setText("Export to ODF");
+        exportToODFButton.setText("Export to ODS");
         exportToODFButton.setFocusable(false);
         exportToODFButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         exportToODFButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -740,6 +740,13 @@ public class MainFrame extends javax.swing.JFrame {
         if (dialog.getResult() != null) {
             ImportManagement im = new ImportManagementImpl();
             im.importFromOdf(new File(dialog.getResult()));
+            if (im.getVideos() != null) {
+                for (Video v : im.getVideos()) {
+                    tableModel.addVideo(v);
+                    videoManagerImpl.addVideo(v);
+                }
+                numberOfVideosLabel.setText("" + tableModel.getRowCount());
+            }
         }
     }//GEN-LAST:event_importFromODFButtonActionPerformed
 

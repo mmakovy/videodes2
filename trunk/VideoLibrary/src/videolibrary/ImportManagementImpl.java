@@ -4,6 +4,7 @@ package videolibrary;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -23,8 +24,13 @@ import org.xml.sax.SAXException;
  * @author Matus Makovy
  */
 public class ImportManagementImpl implements ImportManagement {
+    private List<Video> videos = null;
     
     final static Logger log = LoggerFactory.getLogger(ImportManagementImpl.class);
+    
+    public List<Video> getVideos() {
+        return Collections.unmodifiableList(videos);
+    }
     
     @Override
     public void importFromOdf(File file) {
@@ -127,9 +133,7 @@ public class ImportManagementImpl implements ImportManagement {
 
     @Override
     public void readXML(Document doc) {
-
-        VideoManager videoManager = new VideoManagerImpl();
-
+        videos = new ArrayList<Video>();
         if (doc == null) {
             log.error("Variable doc is null - reading XML");
             throw new IllegalArgumentException("Variabile DOC is null");
@@ -335,7 +339,7 @@ public class ImportManagementImpl implements ImportManagement {
                     String[] countriesSplited = countries.split(", ");
                     video.setCountries(Arrays.asList(countriesSplited));
                 }
-                videoManager.addVideo(video);
+                videos.add(video);
             }
         }
     }
