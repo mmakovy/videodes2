@@ -181,13 +181,13 @@ public class ImportManagementImpl implements ImportManagement {
             }
         }
 
-        for (int m = 1; m < rows.getLength(); m++) {
+        for (int m = 1; m < rows.getLength() - 2; m++) {
 
             NodeList cells = rows.item(m).getChildNodes();
 
             if (cells.item(titleColumnNumber).getFirstChild() == null) {
                 log.error("WRONG DATA in certain line in ODF document");
-                System.err.println("WRONG DATA");
+                System.err.println("WRONG DATA" + m);
             } else {
                 Video video = new Video();
 
@@ -342,5 +342,6 @@ public class ImportManagementImpl implements ImportManagement {
                 videos.add(video);
             }
         }
+        System.err.println("SIze of videos = " + videos.size());
     }
 }
