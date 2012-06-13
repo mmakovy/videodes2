@@ -742,6 +742,13 @@ public class MainFrame extends javax.swing.JFrame {
             im.importFromOdf(new File(dialog.getResult()));
             if (im.getVideos() != null) {
                 for (Video v : im.getVideos()) {
+                    System.out.println(v.getTitle());
+                    System.out.println(v.getRating());
+                    System.out.println(v.getYear());
+                    System.out.println(v.getCountries());
+                    System.out.println(v.getActors());
+                    System.out.println(v.getDirectors());
+                    System.out.println(v.getGenres());
                     tableModel.addVideo(v);
                     videoManagerImpl.addVideo(v);
                 }

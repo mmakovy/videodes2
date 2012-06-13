@@ -326,6 +326,7 @@ public class ImportManagementImpl implements ImportManagement {
                                 System.err.println("Unknown genre");
                         }
                     }
+                    video.setGenres(genresList);
 
 
 
