@@ -9,6 +9,8 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -17,6 +19,8 @@ import org.xml.sax.SAXException;
  * @author Matus Makovy
  */
 public class ImdbDownloaderImpl implements ImdbDownloader {
+    
+    final static Logger log = LoggerFactory.getLogger(ImdbDownloaderImpl.class);
 
     @Override
     public void download(String title) {
@@ -24,7 +28,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
     }
 
     /**
-     * Nacitanie XML dokumnetu z IMDB API
+     * Loading XML from IMDB API
      */
     @Override
     public Document openXML(String title) {
@@ -33,23 +37,21 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             /**
-             * Nahradenie medzier stringom %20
+             * Replacing white space with string %20
              */
             String titleEdited = title.replace(" ", "%20");
             Document doc = builder.parse(new URL("http://www.imdbapi.com/?t=" + titleEdited + "&r=XML").openStream());
             return doc;
         } catch (ParserConfigurationException ex) {
+            log.error("Error when opening XML", ex);
             System.err.println("Parser Configuration fault. Error when opening XML");
             return null;
         } catch (SAXException ex) {
+            log.error("Error when opening XML", ex);
             System.err.println("SAX Exeption. Error when opening XML");
-            System.err.println("The movie wasn't propably found and that caused error.");
-            /**
-             * Toto je chyba toho API, ked film nenajde, tak neposle XML, ale
-             * plaintext :(
-             */
             return null;
         } catch (IOException ex) {
+            log.error("Error when opening XML", ex);
             System.err.println("IO Exception. Error when opening XML");
             return null;
         }
@@ -58,7 +60,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
     }
 
     /**
-     * Citanie z XML
+     * Reading XML doc
      * @param doc 
      */
     @Override
@@ -67,7 +69,17 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         VideoManager manager = new VideoManagerImpl();
 
         if (doc == null) {
+            log.error("Doc is null - reading XML");
             throw new IllegalArgumentException("doc is null");
+        }
+        
+        NodeList root = doc.getElementsByTagName("root");
+        Node rootTag = root.item(0);
+        Element rootElement = (Element) rootTag;
+        
+        if (rootElement.getAttribute("response") == "False" ){
+            log.error("Movie wasn't found.");
+            System.err.println("The movie wasn't found");
         }
 
         NodeList movieTags = doc.getElementsByTagName("movie");
@@ -90,6 +102,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         try {
             yearInt = Integer.parseInt(year);
         } catch (Exception ex) {
+            log.error("Error when reading XML", ex);
             System.err.println("year is not a number");
         }
         if (yearInt < 2100) {
@@ -104,6 +117,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         try {
             ratingInt = Integer.parseInt(rating.substring(0, 1));
         } catch (Exception ex) {
+            log.error("Error when reading XML", ex);
             System.err.println("rating is not a number");
         }
         if (ratingInt < 11) {
@@ -201,6 +215,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
                     genresList.add(Genre.WESTERN);
                     break;
                 default:
+                    log.error("Unknown genre - reading XML");
                     System.err.println("Unknown genre");
 
             }
@@ -214,7 +229,11 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         List<String> countries= new ArrayList();
         countries.add("Unknown (IMDB API)");
         video.setCountries(countries);
-        //System.err.println(video.getGenres().get(0));
+        
+        /**
+         * Add video to database
+         */
+
         manager.addVideo(video);
     }
 }
