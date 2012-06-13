@@ -14,6 +14,6 @@ public interface ImdbDownloader {
     
     public void download(String title);
     public Document openXML(String title);
-    public void readOnlineXML(Document doc);
+    public boolean readOnlineXML(Document doc);
     
 }
