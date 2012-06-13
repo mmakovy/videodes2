@@ -19,17 +19,51 @@ import org.xml.sax.SAXException;
  * @author Matus Makovy
  */
 public class ImdbDownloaderImpl implements ImdbDownloader {
-    
+    Video video = null;
     final static Logger log = LoggerFactory.getLogger(ImdbDownloaderImpl.class);
 
-    @Override
-    public void download(String title) {
-        readOnlineXML(openXML(title));
+    public Video getVideo() {
+        return video;
     }
+    
+    @Override
+    public boolean download(String title) {
+        return readOnlineXML(openXML(title));
+    }
+    
+    
 
     /**
      * Loading XML from IMDB API
      */
+    
+    public Document openXMLById(String id) {
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            /**
+             * Replacing white space with string %20
+             */
+            Document doc = builder.parse(new URL("http://www.imdbapi.com/?i=" + id + "&r=XML").openStream());
+            return doc;
+        } catch (ParserConfigurationException ex) {
+            log.error("Error when opening XML", ex);
+            System.err.println("Parser Configuration fault. Error when opening XML");
+            return null;
+        } catch (SAXException ex) {
+            log.error("Error when opening XML", ex);
+            System.err.println("SAX Exeption. Error when opening XML");
+            return null;
+        } catch (IOException ex) {
+            log.error("Error when opening XML", ex);
+            System.err.println("IO Exception. Error when opening XML");
+            return null;
+        }
+
+
+    }
+    
     @Override
     public Document openXML(String title) {
 
@@ -77,7 +111,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         Node rootTag = root.item(0);
         Element rootElement = (Element) rootTag;
         
-        if (rootElement.getAttribute("response") == "False" ){
+        if (rootElement.getAttribute("response").equals("False")){
             log.error("Movie wasn't found.");
             System.err.println("The movie wasn't found");
             return false;
@@ -87,7 +121,7 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         Node movieTag = movieTags.item(0);
         Element movieTagElement = (Element) movieTag;
 
-        Video video = new Video();
+        video = new Video();
 
         /**
          * Setting TITLE
@@ -116,7 +150,10 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
         String rating = movieTagElement.getAttribute("imdbRating");
         Integer ratingInt = 15;
         try {
-            ratingInt = Integer.parseInt(rating.substring(0, 1));
+            int decimalPart = Integer.parseInt(rating.substring(2, 3));
+            if (decimalPart >= 5) ratingInt = (Integer.parseInt(rating.substring(2, 3)))+1;
+            else ratingInt = Integer.parseInt(rating.substring(0, 1));
+        
         } catch (Exception ex) {
             log.error("Error when reading XML", ex);
             System.err.println("rating is not a number");
@@ -235,7 +272,12 @@ public class ImdbDownloaderImpl implements ImdbDownloader {
          * Add video to database
          */
 
-        manager.addVideo(video);
+        //manager.addVideo(video);
         return true;
+    }
+
+    @Override
+    public boolean downloadViaID(String id) {
+        return readOnlineXML(openXMLById(id));
     }
 }

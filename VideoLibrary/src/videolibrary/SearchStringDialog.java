@@ -24,6 +24,10 @@ public class SearchStringDialog extends javax.swing.JDialog {
         searchLabel.setText("Enter " + text + ":");
     }
     
+    public void setTitleText(String text) {
+        this.setTitle(text);
+    }
+    
     public String getResult() {
         return result;
     }
@@ -100,7 +104,7 @@ public class SearchStringDialog extends javax.swing.JDialog {
             this.dispose();
         }
         else {
-            JOptionPane.showMessageDialog(this, "Search field is empty","No data", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Text field is empty","No data", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_OKButtonActionPerformed
 

@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
  * @author Andrej
  */
 public class SearchNumberDialog extends javax.swing.JDialog {
-    long result = -1;
+    int result = -1;
     /**
      * Creates new form SearchIntDialog
      */
@@ -20,7 +20,7 @@ public class SearchNumberDialog extends javax.swing.JDialog {
         initComponents();
     }
     
-    public long getResult() {
+    public int getResult() {
         return result;
     }
     

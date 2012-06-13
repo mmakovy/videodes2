@@ -125,22 +125,6 @@ public class GenreDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(ThrillerCB)
-                                .addGap(50, 50, 50)
-                                .addComponent(WarCB))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(55, 55, 55)
-                                .addComponent(OkButton)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(77, 77, 77)
-                                .addComponent(WesternCB))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(CancelButton))))
                     .addComponent(BiographyCB)
                     .addComponent(ActionCB)
                     .addGroup(layout.createSequentialGroup()
@@ -148,24 +132,39 @@ public class GenreDialog extends javax.swing.JDialog {
                             .addComponent(DocumentaryCB)
                             .addComponent(FantasyCB)
                             .addComponent(MusicCB)
-                            .addComponent(RomanceCB))
+                            .addComponent(RomanceCB)
+                            .addComponent(ThrillerCB)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(55, 55, 55)
+                                .addComponent(OkButton)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(AdventureCB)
-                            .addComponent(ComedyCB)
-                            .addComponent(DramaCB)
-                            .addComponent(HistoryCB)
-                            .addComponent(MusicalCB)
-                            .addComponent(ScifiCB))
-                        .addGap(45, 45, 45)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(SportCB)
-                            .addComponent(MysteryCB)
-                            .addComponent(HorrorCB)
-                            .addComponent(FamilyCB)
-                            .addComponent(CrimeCB)
-                            .addComponent(AnimationCB))))
-                .addContainerGap(38, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(WarCB)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(77, 77, 77)
+                                        .addComponent(WesternCB))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(20, 20, 20)
+                                        .addComponent(CancelButton))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(AdventureCB)
+                                    .addComponent(ComedyCB)
+                                    .addComponent(DramaCB)
+                                    .addComponent(HistoryCB)
+                                    .addComponent(MusicalCB)
+                                    .addComponent(ScifiCB))
+                                .addGap(45, 45, 45)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(SportCB)
+                                    .addComponent(MysteryCB)
+                                    .addComponent(HorrorCB)
+                                    .addComponent(FamilyCB)
+                                    .addComponent(CrimeCB)
+                                    .addComponent(AnimationCB))))))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,6 +220,86 @@ public class GenreDialog extends javax.swing.JDialog {
             pressed = true;
             genres.add(Genre.ACTION);
         }
+        if (AdventureCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.ADVENTURE);
+        }
+        if (AnimationCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.ANIMATION);
+        }
+        if (BiographyCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.BIOGRAPHY);
+        }
+        if (ComedyCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.COMEDY);
+        }
+        if (CrimeCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.CRIME);
+        }
+        if (DocumentaryCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.DOCUMENTARY);
+        }
+        if (DramaCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.DRAMA);
+        }
+        if (FamilyCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.FAMILY);
+        }
+        if (FantasyCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.FANTASY);
+        }
+        if (HistoryCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.HISTORY);
+        }
+        if (HorrorCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.HORROR);
+        }
+        if (MusicCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.MUSIC);
+        }
+        if (MusicalCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.MUSICAL);
+        }
+        if (MysteryCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.MYSTERY);
+        }
+        if (RomanceCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.ROMANCE);
+        }
+        if (ScifiCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.SCIENCE_FICTION);
+        }
+        if (SportCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.SPORT);
+        }
+        if (ThrillerCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.THRILLER);
+        }
+        if (WarCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.WAR);
+        }
+        if (WesternCB.isSelected()) {
+            pressed = true;
+            genres.add(Genre.WESTERN);
+        }
         
         if (!pressed) {
             JOptionPane.showMessageDialog(this, "No genres selected","No genres", JOptionPane.ERROR_MESSAGE);
@@ -228,10 +307,10 @@ public class GenreDialog extends javax.swing.JDialog {
         else {
             this.dispose();
         };
-        
     }//GEN-LAST:event_OkButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
+        genres = null;
         this.dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed
 

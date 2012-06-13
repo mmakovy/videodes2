@@ -26,29 +26,6 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="ThrillerCB" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                              <Component id="WarCB" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
-                              <Component id="OkButton" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
-                              <Component id="WesternCB" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                              <Component id="CancelButton" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
                   <Component id="BiographyCB" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="ActionCB" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
@@ -57,28 +34,50 @@
                           <Component id="FantasyCB" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="MusicCB" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="RomanceCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="ThrillerCB" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                              <Component id="OkButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="AdventureCB" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="ComedyCB" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="DramaCB" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="HistoryCB" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="MusicalCB" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="ScifiCB" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="SportCB" min="-2" max="-2" attributes="0"/>
-                          <Component id="MysteryCB" min="-2" max="-2" attributes="0"/>
-                          <Component id="HorrorCB" min="-2" max="-2" attributes="0"/>
-                          <Component id="FamilyCB" min="-2" max="-2" attributes="0"/>
-                          <Component id="CrimeCB" min="-2" max="-2" attributes="0"/>
-                          <Component id="AnimationCB" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="WarCB" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
+                                      <Component id="WesternCB" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                                      <Component id="CancelButton" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="AdventureCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ComedyCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="DramaCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="HistoryCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="MusicalCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ScifiCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="SportCB" min="-2" max="-2" attributes="0"/>
+                                  <Component id="MysteryCB" min="-2" max="-2" attributes="0"/>
+                                  <Component id="HorrorCB" min="-2" max="-2" attributes="0"/>
+                                  <Component id="FamilyCB" min="-2" max="-2" attributes="0"/>
+                                  <Component id="CrimeCB" min="-2" max="-2" attributes="0"/>
+                                  <Component id="AnimationCB" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="38" max="32767" attributes="0"/>
+              <EmptySpace pref="25" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
