@@ -5,6 +5,7 @@
 package videolibrary;
 
 import java.io.File;
+import java.util.List;
 import org.w3c.dom.Document;
 
 /**
@@ -12,7 +13,7 @@ import org.w3c.dom.Document;
  * @author Matus Makovy
  */
 public interface ImportManagement {
-    
+    public List<Video> getVideos();
     public void importFromOdf(File file);
     public File unzipper(File file);
     public Document openXML(File file);
