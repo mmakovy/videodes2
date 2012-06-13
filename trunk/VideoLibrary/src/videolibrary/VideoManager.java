@@ -14,13 +14,13 @@ public interface VideoManager {
 
     public boolean addVideo(Video video);
     
-    public void deleteVideo(long id);
+    public void deleteVideo(int id);
 
     public List<Video> getVideoByTitle(String title);
     
     public List<Video> getAllVideos();
     
-    public Video getVideoById(long id);
+    public Video getVideoById(int id);
     
     public List<Video> getVideoByYear(int year);
     

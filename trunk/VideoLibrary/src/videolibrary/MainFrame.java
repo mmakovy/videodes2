@@ -4,13 +4,17 @@
  */
 package videolibrary;
 
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -99,9 +103,16 @@ public class MainFrame extends javax.swing.JFrame {
 
     public MainFrame() {
         initComponents();
-        //if (!checkXml()) {
-        //    JOptionPane.showMessageDialog(this, "XML File is not valid", "Error", JOptionPane.ERROR_MESSAGE);
-       // }
+        /*
+         * final Toolkit toolkit = Toolkit.getDefaultToolkit(); final Dimension
+         * screenSize = toolkit.getScreenSize(); final int width = 1200; final
+         * int height = 600; final int x = (screenSize.width - width) / 2; final
+         * int y = (screenSize.height - height) / 2; setBounds(x, y, width,
+         * height);
+         *
+         * setResizable (false);
+         */
+
         tableModel = (VideoTableModel) videoTable.getModel();
         videoTable.removeColumn(videoTable.getColumn("Id"));
         videoManagerImpl = new VideoManagerImpl();
@@ -115,7 +126,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (!a.contains("VideoDes2DB")) {
             try {
                 BaseXDriver.createCollection(context);
-                
+
             } catch (BaseXException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
@@ -125,14 +136,11 @@ public class MainFrame extends javax.swing.JFrame {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
+        
         }
-
-
-
+        getAllVideosButtonActionPerformed(null);
     }
-    //        getAllVideosButtonActionPerformed(null);
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -151,6 +159,8 @@ public class MainFrame extends javax.swing.JFrame {
         getAllVideosButton = new javax.swing.JButton();
         jSeparator11 = new javax.swing.JToolBar.Separator();
         jSeparator13 = new javax.swing.JToolBar.Separator();
+        jLabel1 = new javax.swing.JLabel();
+        jSeparator15 = new javax.swing.JToolBar.Separator();
         searchByIdButton = new javax.swing.JButton();
         jSeparator8 = new javax.swing.JToolBar.Separator();
         searchByTitleButton = new javax.swing.JButton();
@@ -193,6 +203,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Video Library");
+        setMaximumSize(new java.awt.Dimension(500, 500));
+        setMinimumSize(new java.awt.Dimension(500, 500));
 
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
@@ -235,7 +247,11 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar.add(jSeparator11);
         toolBar.add(jSeparator13);
 
-        searchByIdButton.setText("Search by Id");
+        jLabel1.setText("Search by:");
+        toolBar.add(jLabel1);
+        toolBar.add(jSeparator15);
+
+        searchByIdButton.setText("Id");
         searchByIdButton.setFocusable(false);
         searchByIdButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByIdButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -247,7 +263,7 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar.add(searchByIdButton);
         toolBar.add(jSeparator8);
 
-        searchByTitleButton.setText("Search by Title");
+        searchByTitleButton.setText("Title");
         searchByTitleButton.setFocusable(false);
         searchByTitleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByTitleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -259,7 +275,7 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar.add(searchByTitleButton);
         toolBar.add(jSeparator7);
 
-        searchByDirectorButton.setText("Search by Director");
+        searchByDirectorButton.setText("Director");
         searchByDirectorButton.setFocusable(false);
         searchByDirectorButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByDirectorButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -271,7 +287,7 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar.add(searchByDirectorButton);
         toolBar.add(jSeparator6);
 
-        searchByActorButton.setText("Search by Actor");
+        searchByActorButton.setText("Actor");
         searchByActorButton.setFocusable(false);
         searchByActorButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByActorButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -283,7 +299,7 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar.add(searchByActorButton);
         toolBar.add(jSeparator5);
 
-        searchByYearButton.setText("Search by Year");
+        searchByYearButton.setText("Year");
         searchByYearButton.setFocusable(false);
         searchByYearButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByYearButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -295,7 +311,7 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar.add(searchByYearButton);
         toolBar.add(jSeparator4);
 
-        searchByGenreButton.setText("Search by Genre");
+        searchByGenreButton.setText("Genre");
         searchByGenreButton.setFocusable(false);
         searchByGenreButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByGenreButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -307,7 +323,7 @@ public class MainFrame extends javax.swing.JFrame {
         toolBar.add(searchByGenreButton);
         toolBar.add(jSeparator10);
 
-        searchByCountryButton.setText("Search by Country");
+        searchByCountryButton.setText("Country");
         searchByCountryButton.setFocusable(false);
         searchByCountryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchByCountryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -324,6 +340,11 @@ public class MainFrame extends javax.swing.JFrame {
         importFromODFButton.setFocusable(false);
         importFromODFButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         importFromODFButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        importFromODFButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importFromODFButtonActionPerformed(evt);
+            }
+        });
         toolBar.add(importFromODFButton);
         toolBar.add(jSeparator3);
 
@@ -331,6 +352,11 @@ public class MainFrame extends javax.swing.JFrame {
         exportToODFButton.setFocusable(false);
         exportToODFButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         exportToODFButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        exportToODFButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportToODFButtonActionPerformed(evt);
+            }
+        });
         toolBar.add(exportToODFButton);
 
         videoTable.setModel(new VideoTableModel());
@@ -349,9 +375,19 @@ public class MainFrame extends javax.swing.JFrame {
         fileMenu.setText("File");
 
         importFromODFMenuButton.setText("Import from ODF");
+        importFromODFMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importFromODFMenuButtonActionPerformed(evt);
+            }
+        });
         fileMenu.add(importFromODFMenuButton);
 
         exportToODFMenuButton.setText("Export to ODF");
+        exportToODFMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportToODFMenuButtonActionPerformed(evt);
+            }
+        });
         fileMenu.add(exportToODFMenuButton);
 
         exitMenuButton.setText("Exit");
@@ -464,7 +500,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(staticLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(numberOfVideosLabel)
-                .addContainerGap(866, Short.MAX_VALUE))
+                .addContainerGap())
             .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -476,7 +512,8 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(staticLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(numberOfVideosLabel)))
+                    .addComponent(numberOfVideosLabel))
+                .addContainerGap())
         );
 
         pack();
@@ -484,16 +521,28 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addVideoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVideoButtonActionPerformed
         AddVideoDialog dialog = new AddVideoDialog(this, true);
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - dialog.getWidth()) / 2;
+        final int y = (screenSize.height - dialog.getHeight()) / 2;
+        dialog.setLocation(x, y);
         dialog.setVisible(true);
         if (dialog.getVideo() != null) {
-            tableModel.addVideo(dialog.getVideo()); // !!! *** !!! Nezabudni to nepridavat ak je envalidne XML !!! *** !!! \\
-            numberOfVideosLabel.setText("" + tableModel.getRowCount());
-            if (!videoManagerImpl.addVideo(dialog.getVideo())) JOptionPane.showMessageDialog(this, "XML is not valid","XML not valid", JOptionPane.ERROR_MESSAGE);
+            if (!videoManagerImpl.addVideo(dialog.getVideo())) {
+                JOptionPane.showMessageDialog(this, "XML is not valid", "XML not valid", JOptionPane.ERROR_MESSAGE);
+            } else {
+                getAllVideosButtonActionPerformed(null);
+            }
         }
     }//GEN-LAST:event_addVideoButtonActionPerformed
 
     private void searchByIdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByIdButtonActionPerformed
         SearchNumberDialog dialog = new SearchNumberDialog(this, true);
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - dialog.getWidth()) / 2;
+        final int y = (screenSize.height - dialog.getHeight()) / 2;
+        dialog.setLocation(x, y);
         dialog.setText("id");
         dialog.setVisible(true);
         if (dialog.getResult() != -1) {
@@ -502,6 +551,8 @@ public class MainFrame extends javax.swing.JFrame {
                 tableModel.removeAll();
                 tableModel.addVideo(video);
                 numberOfVideosLabel.setText("" + tableModel.getRowCount());
+            } else {
+                JOptionPane.showMessageDialog(this, "Video with id " + dialog.getResult() + " not found", "Not found", JOptionPane.WARNING_MESSAGE);
             }
         }
     }//GEN-LAST:event_searchByIdButtonActionPerformed
@@ -552,115 +603,120 @@ public class MainFrame extends javax.swing.JFrame {
     private void searchByTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByTitleButtonActionPerformed
         SearchStringDialog dialog = new SearchStringDialog(this, true);
         dialog.setText("title");
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - dialog.getWidth()) / 2;
+        final int y = (screenSize.height - dialog.getHeight()) / 2;
+        dialog.setLocation(x, y);
         dialog.setVisible(true);
         if (dialog.getResult() != null) {
-//            List<Video> temp = videoManagerImpl.getVideoByTitle(dialog.getResult());
-//            tableModel.removeAll();
-//            if (temp != null) {
-//                for (Video v: temp) {
-//                    tableModel.addVideo(v);
-//                }
-//            }
-            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+            GetVideosByWorker worker = new GetVideosByWorker();
+            worker.setSearch(dialog.getResult());
+            worker.setType("title");
+            worker.execute();
         }
     }//GEN-LAST:event_searchByTitleButtonActionPerformed
 
     private void searchByDirectorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByDirectorButtonActionPerformed
         SearchStringDialog dialog = new SearchStringDialog(this, true);
         dialog.setText("director");
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - dialog.getWidth()) / 2;
+        final int y = (screenSize.height - dialog.getHeight()) / 2;
+        dialog.setLocation(x, y);
         dialog.setVisible(true);
         if (dialog.getResult() != null) {
-//            List<Video> temp = videoManagerImpl.getVideoByDirector(dialog.getResult());
-//            tableModel.removeAll();
-//            if (temp != null) {
-//                for (Video v: temp) {
-//                    tableModel.addVideo(v);
-//                }
-//            }
-            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+            GetVideosByWorker worker = new GetVideosByWorker();
+            worker.setSearch(dialog.getResult());
+            worker.setType("director");
+            worker.execute();
         }
     }//GEN-LAST:event_searchByDirectorButtonActionPerformed
 
     private void searchByActorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByActorButtonActionPerformed
         SearchStringDialog dialog = new SearchStringDialog(this, true);
         dialog.setText("actor");
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - dialog.getWidth()) / 2;
+        final int y = (screenSize.height - dialog.getHeight()) / 2;
+        dialog.setLocation(x, y);
         dialog.setVisible(true);
         if (dialog.getResult() != null) {
-//            List<Video> temp = videoManagerImpl.getVideoByActor(dialog.getResult());
-//            tableModel.removeAll();
-//            if (temp != null) {
-//                for (Video v: temp) {
-//                    tableModel.addVideo(v);
-//                }
-//            }
-            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+            GetVideosByWorker worker = new GetVideosByWorker();
+            worker.setSearch(dialog.getResult());
+            worker.setType("actor");
+            worker.execute();
         }
     }//GEN-LAST:event_searchByActorButtonActionPerformed
 
     private void searchByYearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByYearButtonActionPerformed
         SearchNumberDialog dialog = new SearchNumberDialog(this, true);
         dialog.setText("year");
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - dialog.getWidth()) / 2;
+        final int y = (screenSize.height - dialog.getHeight()) / 2;
+        dialog.setLocation(x, y);
         dialog.setVisible(true);
         if (dialog.getResult() != -1) {
-//            List<Video> temp = videoManagerImpl.getVideoByYear((int)dialog.getResult());
-//            tableModel.removeAll();
-//            if (temp != null) {
-//               for (Video v: temp) {
-//                  tableModel.addVideo(v);
-//            }
-//            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+            GetVideosByWorker worker = new GetVideosByWorker();
+            worker.setSearch(dialog.getResult() + "");
+            worker.setType("year");
+            worker.execute();
         }
     }//GEN-LAST:event_searchByYearButtonActionPerformed
 
     private void searchByGenreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByGenreButtonActionPerformed
         GenreDialog dialog = new GenreDialog(this, true);
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - dialog.getWidth()) / 2;
+        final int y = (screenSize.height - dialog.getHeight()) / 2;
+        dialog.setLocation(x, y);
         dialog.setVisible(true);
-//        if (dialog.getGenres().size() > 0) {
-//            for (Genre g: dialog.getGenres()) {
-//                List<Video> temp = videoManagerImpl.getVideoByGenre(g);
-//                if (temp != null) {
-//                    for (Video v: temp) {
-//                        tableModel.addVideo(v);
-//                    }
-//                }
-//            }
-//        }
+        if (dialog.getGenres() != null) {
+            GetVideosByGenreWorker worker = new GetVideosByGenreWorker();
+            worker.setGenres(dialog.getGenres());
+            worker.execute();
+        }
     }//GEN-LAST:event_searchByGenreButtonActionPerformed
 
     private void searchByCountryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByCountryButtonActionPerformed
         SearchStringDialog dialog = new SearchStringDialog(this, true);
         dialog.setText("country");
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - dialog.getWidth()) / 2;
+        final int y = (screenSize.height - dialog.getHeight()) / 2;
+        dialog.setLocation(x, y);
         dialog.setVisible(true);
         if (dialog.getResult() != null) {
-//            List<Video> temp = videoManagerImpl.getVideoByCountry(dialog.getResult());
-//            tableModel.removeAll();
-//            if (temp != null) {
-//                for (Video v: temp) {
-//                    tableModel.addVideo(v);
-//                }
-//            }
-            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+            GetVideosByWorker worker = new GetVideosByWorker();
+            worker.setSearch(dialog.getResult());
+            worker.setType("country");
+            worker.execute();
         }
     }//GEN-LAST:event_searchByCountryButtonActionPerformed
 
     private void deleteVideoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteVideoButtonActionPerformed
-        if (videoTable.getSelectedRow() != -1) {
-//            videoManagerImpl.deleteVideo((long)(tableModel.getValueAt(videoTable.getSelectedRow(), 8)));
-            tableModel.removeVideo(videoTable.getSelectedRow());
-            tableModel.fireTableDataChanged();
-            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        int rows[] = videoTable.getSelectedRows();
+        if (rows.length > 0) {
+            if (JOptionPane.showConfirmDialog(this, "Really delete selected videos?", "Really delete?", 2) == 0) {
+                for (int i = rows.length - 1; i >= 0; i--) {
+                    videoManagerImpl.deleteVideo((int) (tableModel.getValueAt(rows[i], 7)));
+                    tableModel.removeVideo(rows[i]);
+                    tableModel.fireTableDataChanged();
+                }
+                numberOfVideosLabel.setText("" + tableModel.getRowCount());
+            }
         }
     }//GEN-LAST:event_deleteVideoButtonActionPerformed
 
     private void getAllVideosButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getAllVideosButtonActionPerformed
-        List<Video> temp = videoManagerImpl.getAllVideos();
-        tableModel.removeAll();
-//        if (temp != null) {
-//            for (Video v: temp) {
-//                 tableModel.addVideo(v);
-//            }
-//        }
-        numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        GetAllVideosWorker worker = new GetAllVideosWorker();
+        worker.execute();
     }//GEN-LAST:event_getAllVideosButtonActionPerformed
 
     private void deleteVideoMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteVideoMenuButtonActionPerformed
@@ -670,6 +726,180 @@ public class MainFrame extends javax.swing.JFrame {
     private void getAllVideosMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getAllVideosMenuButtonActionPerformed
         getAllVideosButtonActionPerformed(evt);
     }//GEN-LAST:event_getAllVideosMenuButtonActionPerformed
+
+    private void importFromODFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importFromODFButtonActionPerformed
+        SearchStringDialog dialog = new SearchStringDialog(this, true);
+        dialog.setText("filename");
+        dialog.setTitleText("Import from ODF file");
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - dialog.getWidth()) / 2;
+        final int y = (screenSize.height - dialog.getHeight()) / 2;
+        dialog.setLocation(x, y);
+        dialog.setVisible(true);
+        if (dialog.getResult() != null) {
+            ImportManagement im = new ImportManagementImpl();
+            im.importFromOdf(new File(dialog.getResult()));
+        }
+    }//GEN-LAST:event_importFromODFButtonActionPerformed
+
+    private void exportToODFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportToODFButtonActionPerformed
+        SearchStringDialog dialog = new SearchStringDialog(this, true);
+        dialog.setText("filename");
+        dialog.setTitleText("Export to ODF file");
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - dialog.getWidth()) / 2;
+        final int y = (screenSize.height - dialog.getHeight()) / 2;
+        dialog.setLocation(x, y);
+        dialog.setVisible(true);
+        if (dialog.getResult() != null) {
+            ExportManagement em = new ExportManagementImpl();
+            em.exportToOdf(new File(dialog.getResult()));
+        }
+    }//GEN-LAST:event_exportToODFButtonActionPerformed
+
+    private void importFromODFMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importFromODFMenuButtonActionPerformed
+        importFromODFButtonActionPerformed(evt);
+    }//GEN-LAST:event_importFromODFMenuButtonActionPerformed
+
+    private void exportToODFMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportToODFMenuButtonActionPerformed
+        exportToODFButtonActionPerformed(evt);
+    }//GEN-LAST:event_exportToODFMenuButtonActionPerformed
+
+    private class GetAllVideosWorker extends SwingWorker<Integer, Video> {
+        @Override
+        protected Integer doInBackground() throws Exception {
+            tableModel.removeAll();
+            List<Video> temp = videoManagerImpl.getAllVideos();
+            if (temp != null) {
+                for (Video v : temp) {
+                    publish(v);
+                }
+                return temp.size();
+            }
+            return -1;
+        }
+
+        protected void process(List<Video> vids) {
+            if (vids != null) {
+                for (Video v : vids) {
+                    tableModel.addVideo(v);
+                }
+            }
+        }
+
+        protected void done() {
+            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        }
+    }
+
+    private class GetVideosByWorker extends SwingWorker<Integer, Video> {
+        private String search, type;
+
+        public void setSearch(String search) {
+            this.search = search;
+        }
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        @Override
+        protected Integer doInBackground() throws Exception {
+            tableModel.removeAll();
+            List<Video> temp = null;
+            switch (type) {
+                case "title": {
+                    temp = videoManagerImpl.getVideoByTitle(search);
+                    break;
+                }
+                case "actor": {
+                    temp = videoManagerImpl.getVideoByActor(search);
+                    break;
+                }
+                case "director": {
+                    temp = videoManagerImpl.getVideoByDirector(search);
+                    break;
+                }
+                case "year": {
+                    temp = videoManagerImpl.getVideoByYear(Integer.parseInt(search));
+                    break;
+                }
+                case "country": {
+                    temp = videoManagerImpl.getVideoByCountry(search);
+                    break;
+                }
+            }
+            if (temp != null) {
+                for (Video v : temp) {
+                    publish(v);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "No videos found", "Not found", JOptionPane.WARNING_MESSAGE);
+            }
+            return 0;
+        }
+
+        protected void process(List<Video> vids) {
+            if (vids != null) {
+                for (Video v : vids) {
+                    tableModel.addVideo(v);
+                }
+            }
+        }
+
+        protected void done() {
+            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        }
+    }
+
+    private class GetVideosByGenreWorker extends SwingWorker<Integer, Video> {
+
+        private List<Genre> genres;
+
+        public void setGenres(List<Genre> genres) {
+            this.genres = genres;
+        }
+
+        @Override
+        protected Integer doInBackground() throws Exception {
+            List<Video> temp = new ArrayList<Video>();
+            for (Genre g : genres) {
+                List<Video> temp2 = videoManagerImpl.getVideoByGenre(g);
+                if (temp2 != null) {
+                    temp.addAll(temp2);
+                }
+            }
+            
+            for (int i = 0; i < temp.size(); i++) {
+                for (int j = 0; j < temp.size(); j++) {
+                    if (i == j) {
+                    } else if (temp.get(j).equals(temp.get(i))) {
+                        temp.remove(j);
+                    }
+                }
+            }
+            tableModel.removeAll();
+            if (temp.size() > 0) {
+                for (Video v : temp) {
+                    publish(v);
+                }
+            }
+            return -1;
+        }
+
+        protected void process(List<Video> vids) {
+            if (vids != null) {
+                for (Video v : vids) {
+                    tableModel.addVideo(v);
+                }
+            }
+        }
+
+        protected void done() {
+            numberOfVideosLabel.setText("" + tableModel.getRowCount());
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -725,6 +955,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem getAllVideosMenuButton;
     private javax.swing.JButton importFromODFButton;
     private javax.swing.JMenuItem importFromODFMenuButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator10;
@@ -732,6 +963,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator14;
+    private javax.swing.JToolBar.Separator jSeparator15;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
