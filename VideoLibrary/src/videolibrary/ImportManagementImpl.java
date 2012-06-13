@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package videolibrary;
 
 import java.io.*;
@@ -13,6 +10,8 @@ import java.util.zip.ZipInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -25,6 +24,8 @@ import org.xml.sax.SAXException;
  */
 public class ImportManagementImpl implements ImportManagement {
     
+    final static Logger log = LoggerFactory.getLogger(ImportManagementImpl.class);
+    
     @Override
     public void importFromOdf(File file) {
         readXML(openXML(unzipper(file)));
@@ -34,6 +35,7 @@ public class ImportManagementImpl implements ImportManagement {
     public File unzipper(File file) {
 
         if (file == null) {
+            log.error("Error unzipping ODS, file is null");
             throw new IllegalArgumentException("File is null");
         }
 
@@ -65,9 +67,11 @@ public class ImportManagementImpl implements ImportManagement {
 
 
         } catch (FileNotFoundException ex) {
+            log.error("Error when unzipping ODS",ex);
             System.err.println("File not found");
             return null;
         } catch (IOException ex) {
+            log.error("Error when unzipping ODS",ex);
             System.err.println("IO error");
             return null;
         } finally {
@@ -75,6 +79,7 @@ public class ImportManagementImpl implements ImportManagement {
                 try{
                     in.close();
                 }catch(IOException ex){
+                    log.error("Error when closing stream",ex);
                     System.err.println("Error when closing inputstream");    
                 }
             }
@@ -83,6 +88,7 @@ public class ImportManagementImpl implements ImportManagement {
                 try{
                     out.close();
                 }catch(IOException ex){
+                    log.error("Error when closing stream",ex);
                     System.err.println("Error when closing outputstream");    
                 }
             }
@@ -93,6 +99,7 @@ public class ImportManagementImpl implements ImportManagement {
     public Document openXML(File file) {
 
         if (file == null) {
+            log.error("Error opening XML, file is null");
             throw new IllegalArgumentException("File is null");
         }
 
@@ -102,12 +109,15 @@ public class ImportManagementImpl implements ImportManagement {
             Document doc = builder.parse(file);
             return doc;
         } catch (ParserConfigurationException ex) {
+            log.error("Error when opening XML",ex);
             System.err.println("Parser Configuration fault. Error when opening XML");
             return null;
         } catch (SAXException ex) {
+            log.error("Error when opening XML",ex);
             System.err.println("SAX Exeption. Error when opening XML");
             return null;
         } catch (IOException ex) {
+            log.error("Error when opening XML",ex);
             System.err.println("IO Exception. Error when opening XML");
             return null;
         }
@@ -121,6 +131,7 @@ public class ImportManagementImpl implements ImportManagement {
         VideoManager videoManager = new VideoManagerImpl();
 
         if (doc == null) {
+            log.error("Variable doc is null - reading XML");
             throw new IllegalArgumentException("Variabile DOC is null");
         }
 
@@ -171,6 +182,7 @@ public class ImportManagementImpl implements ImportManagement {
             NodeList cells = rows.item(m).getChildNodes();
 
             if (cells.item(titleColumnNumber).getFirstChild() == null) {
+                log.error("WRONG DATA in certain line in ODF document");
                 System.err.println("WRONG DATA");
             } else {
                 Video video = new Video();
@@ -206,6 +218,7 @@ public class ImportManagementImpl implements ImportManagement {
                     try {
                         year = Integer.parseInt(cells.item(yearColumnNumber).getFirstChild().getTextContent());
                     } catch (DOMException | NumberFormatException ex) {
+                        log.error("Year is not a number - reading XML");
                         System.err.println("Year is not a number");
                     }
                     if (year < 2100) {
@@ -222,6 +235,7 @@ public class ImportManagementImpl implements ImportManagement {
                     try {
                         rating = Integer.parseInt(cells.item(ratingColumnNumber).getFirstChild().getTextContent());
                     } catch (DOMException | NumberFormatException ex) {
+                        log.error("Rating is not a number - reading XML");
                         System.err.println("Rating is not a number");
                     }
                     if (rating < 11) {
@@ -304,6 +318,7 @@ public class ImportManagementImpl implements ImportManagement {
                                 genresList.add(Genre.WESTERN);
                                 break;
                             default :
+                                log.error("Unknown genre - reading XML");
                                 System.err.println("Unknown genre");
                         }
                     }
