@@ -311,6 +311,7 @@ public class AddVideoDialog extends javax.swing.JDialog {
     public boolean checkValues() {  
         if (imdbImportRadioButton.isSelected()) {
             if (titleTextField.getText().equals("")) {
+               JOptionPane.showMessageDialog(this, "Title field is empty","No title", JOptionPane.ERROR_MESSAGE);
                return false;
             }
             if (countryTextField.getText().equals("")) {
