@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
+import javax.swing.table.TableColumn;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -41,7 +42,7 @@ import org.xml.sax.SAXException;
 public class MainFrame extends javax.swing.JFrame {
 
     private VideoTableModel tableModel;
-    private VideoManagerImpl videoManagerImpl;
+    private VideoManager videoManagerImpl;
     private Context context = new Context();
 
     /**
@@ -103,16 +104,15 @@ public class MainFrame extends javax.swing.JFrame {
 
     public MainFrame() {
         initComponents();
-        /*
-         * final Toolkit toolkit = Toolkit.getDefaultToolkit(); final Dimension
-         * screenSize = toolkit.getScreenSize(); final int width = 1200; final
-         * int height = 600; final int x = (screenSize.width - width) / 2; final
-         * int y = (screenSize.height - height) / 2; setBounds(x, y, width,
-         * height);
-         *
-         * setResizable (false);
-         */
-
+        
+        final Toolkit toolkit = Toolkit.getDefaultToolkit(); final Dimension
+        screenSize = toolkit.getScreenSize();  
+        final int x = (screenSize.width - 1000) / 2; 
+        final int y = (screenSize.height - 693) / 2; 
+        setBounds(x, y, this.getWidth(), this.getHeight());
+        setResizable (false);
+         
+        
         tableModel = (VideoTableModel) videoTable.getModel();
         videoTable.removeColumn(videoTable.getColumn("Id"));
         videoManagerImpl = new VideoManagerImpl();
@@ -742,13 +742,6 @@ public class MainFrame extends javax.swing.JFrame {
             im.importFromOdf(new File(dialog.getResult()));
             if (im.getVideos() != null) {
                 for (Video v : im.getVideos()) {
-                    System.out.println(v.getTitle());
-                    System.out.println(v.getRating());
-                    System.out.println(v.getYear());
-                    System.out.println(v.getCountries());
-                    System.out.println(v.getActors());
-                    System.out.println(v.getDirectors());
-                    System.out.println(v.getGenres());
                     tableModel.addVideo(v);
                     videoManagerImpl.addVideo(v);
                 }
@@ -885,17 +878,10 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
             
-            for (int i = 0; i < temp.size(); i++) {
-                for (int j = 0; j < temp.size(); j++) {
-                    if (i == j) {
-                    } else if (temp.get(j).equals(temp.get(i))) {
-                        temp.remove(j);
-                    }
-                }
-            }
+            List<Video> result = VideoManagerImpl.removeDuplicates(temp);
             tableModel.removeAll();
-            if (temp.size() > 0) {
-                for (Video v : temp) {
+            if (result.size() > 0) {
+                for (Video v : result) {
                     publish(v);
                 }
             }
