@@ -8,29 +8,26 @@ import java.io.File;
 import java.util.List;
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
-import org.w3c.dom.Element;
 import org.odftoolkit.odfdom.doc.OdfDocument.*;
-import org.odftoolkit.odfdom.pkg.OdfPackage;
 
 /**
  *
  * @author Samo
  */
 public class ExportManagementImpl implements ExportManagement{
+    private List<Video> videoList = null;
     
+    public void setList(List videos) {
+        this.videoList = videos;
+    }
     @Override
-    public void exportToOdf(File file) {
-        VideoManager manager = new VideoManagerImpl();
-        List<Video> videoList = manager.getAllVideos();
-        //String filenam = "abc";
+    public boolean exportToOdf(File file) {
         try{
             OdfSpreadsheetDocument odf = OdfSpreadsheetDocument.newSpreadsheetDocument();
             //OdfSpreadsheetDocument odf = OdfSpreadsheetDocument.loadDocument("DemoTemplate.ods");
             
-        int j=0;
-        for (Video video : videoList){j++;}
         
-        String[][] data = new String[j+1][7];
+        String[][] data = new String[videoList.size()+1][7];
         data[0][0] = "Title";
         data[0][1] = "Director(s)";
         data[0][2] = "Actor(s)";
@@ -103,7 +100,8 @@ public class ExportManagementImpl implements ExportManagement{
         videoTable.getCellByPosition(0, 0).setStringValue("Title");
         
         odf.save(file);
-        }  catch (Exception e) { e.printStackTrace(); }            
+        return true;
+        }  catch (Exception e) { e.printStackTrace(); return false;}            
     }
 
 }

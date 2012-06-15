@@ -5,6 +5,7 @@
 package videolibrary;
 
 import java.io.File;
+import java.util.List;
 
 /**
  *
@@ -12,5 +13,7 @@ import java.io.File;
  */
 public interface ExportManagement {
     
-    public void exportToOdf(File file);
+    public boolean exportToOdf(File file);
+
+    public void setList(List<Video> allVideos);
 }
