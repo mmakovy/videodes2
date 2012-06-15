@@ -6,9 +6,8 @@ package videolibrary;
 
 import java.io.File;
 import java.util.List;
-import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
-import org.odftoolkit.odfdom.doc.table.OdfTable;
-import org.odftoolkit.odfdom.doc.OdfDocument.*;
+import org.odftoolkit.simple.table.Table;
+import org.odftoolkit.simple.SpreadsheetDocument;
 
 /**
  *
@@ -23,10 +22,8 @@ public class ExportManagementImpl implements ExportManagement{
     @Override
     public boolean exportToOdf(File file) {
         try{
-            OdfSpreadsheetDocument odf = OdfSpreadsheetDocument.newSpreadsheetDocument();
-            //OdfSpreadsheetDocument odf = OdfSpreadsheetDocument.loadDocument("DemoTemplate.ods");
+            SpreadsheetDocument odf = SpreadsheetDocument.newSpreadsheetDocument();
             
-        
         String[][] data = new String[videoList.size()+1][7];
         data[0][0] = "Title";
         data[0][1] = "Director(s)";
@@ -95,7 +92,7 @@ public class ExportManagementImpl implements ExportManagement{
         }
         
         odf.getTableByName("Sheet1").remove();
-        OdfTable videoTable = OdfTable.newTable(odf, null, null, data);
+        Table videoTable = Table.newTable(odf, null, null, data);
         videoTable.setTableName("Videos");
         videoTable.getCellByPosition(0, 0).setStringValue("Title");
         
