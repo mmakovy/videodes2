@@ -45,6 +45,18 @@ public class VideoManagerImpl implements VideoManager {
         return test.equals("");
     }
 
+    public static List removeDuplicates(List list) {
+        for (int i = 0; i < list.size(); i++) {
+                for (int j = 0; j < list.size(); j++) {
+                    if (i == j) {
+                    } else if (list.get(j).equals(list.get(i))) {
+                        list.remove(j);
+                    }
+                }
+        }
+        return Collections.unmodifiableList(list);
+    }
+    
     @Override
     public boolean addVideo(Video video) {
         if (video == null) {
@@ -194,9 +206,9 @@ public class VideoManagerImpl implements VideoManager {
             result = (new XQuery(
                     "for $doc in collection('VideoDes2DB')"
                     + "let $lower_title := lower-case($doc//video/title)"
-                    + "where $lower_title='"
+                    + "where contains($lower_title,'"
                     + lowerTitle
-                    + "'"
+                    + "')"
                     + "return $doc").execute(context));
         } catch (BaseXException ex) {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -221,7 +233,7 @@ public class VideoManagerImpl implements VideoManager {
         }
 
         context.close();
-        return Collections.unmodifiableList(temp);
+        return Collections.unmodifiableList(removeDuplicates(temp));
     }
 
     @Override
@@ -328,7 +340,7 @@ public class VideoManagerImpl implements VideoManager {
         String result = null;
 
         try {
-            result = (new XQuery("for $video in (collection('VideoDes2DB')//video) return (for $director in $video/directors/director let $lower_name := lower-case($director) where $lower_name = '" + lowerName + "' return $video)").execute(context));
+            result = (new XQuery("for $video in (collection('VideoDes2DB')//video) return (for $director in $video/directors/director let $lower_name := lower-case($director) where contains($lower_name,'" + lowerName + "') return $video)").execute(context));
         } catch (BaseXException ex) {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -352,7 +364,7 @@ public class VideoManagerImpl implements VideoManager {
         }
 
         context.close();
-        return Collections.unmodifiableList(temp);
+        return Collections.unmodifiableList(removeDuplicates(temp));
     }
 
     @Override
@@ -370,7 +382,7 @@ public class VideoManagerImpl implements VideoManager {
         String result = null;
 
         try {
-            result = (new XQuery("for $video in (collection('VideoDes2DB')//video) return (for $actor in $video/actors/actor let $lower_name := lower-case($actor) where $lower_name = '" + lowerName + "' return $video)").execute(context));
+            result = (new XQuery("for $video in (collection('VideoDes2DB')//video) return (for $actor in $video/actors/actor let $lower_name := lower-case($actor) where contains($lower_name,'" + lowerName + "') return $video)").execute(context));
         } catch (BaseXException ex) {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -394,7 +406,7 @@ public class VideoManagerImpl implements VideoManager {
         }
 
         context.close();
-        return Collections.unmodifiableList(temp);
+        return Collections.unmodifiableList(removeDuplicates(temp));
     }
 
     @Override
@@ -453,7 +465,7 @@ public class VideoManagerImpl implements VideoManager {
         String result = null;
 
         try {
-            result = (new XQuery("for $video in (collection('VideoDes2DB')//video) return (for $country in $video/countries/country let $lower_name := lower-case($country) where $lower_name = '" + lowerName + "' return $video)").execute(context));
+            result = (new XQuery("for $video in (collection('VideoDes2DB')//video) return (for $country in $video/countries/country let $lower_name := lower-case($country) where contains($lower_name,'" + lowerName + "') return $video)").execute(context));
         } catch (BaseXException ex) {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -477,7 +489,7 @@ public class VideoManagerImpl implements VideoManager {
         }
 
         context.close();
-        return Collections.unmodifiableList(temp);
+        return Collections.unmodifiableList(removeDuplicates(temp));
     }
 
     static void query(final String query) throws BaseXException {
