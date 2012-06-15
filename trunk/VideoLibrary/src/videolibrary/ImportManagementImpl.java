@@ -195,169 +195,209 @@ public class ImportManagementImpl implements ImportManagement {
             }
         }
 
-        for (int m = 1; m < rows.getLength() - 2; m++) {
+        /**
+         * Do we have all needed columns in ODS file ?
+         */
+        if (titleColumnNumber == 300 || actorsColumnNumber == 300
+                || directorsColumnNumber == 300 || ratingColumnNumber == 300
+                || yearColumnNumber == 300 || yearColumnNumber == 300
+                || genresColumnNumber == 300 || countryColumnNumber == 300) {
 
-            NodeList cells = rows.item(m).getChildNodes();
+            error = true;
+            log.error("At least one column is missing");
+            System.err.println("At least one column is missing");
+        } else {
 
-            if (cells.item(titleColumnNumber).getFirstChild() == null) {
-                error = true;
-                log.error("WRONG DATA in certain line in ODF document");
-                System.err.println("WRONG DATA - line number " + m);
-            } else {
-                Video video = new Video();
+            for (int m = 1; m < rows.getLength() - 2; m++) {
 
-                /**
-                 * Setting TITLE
-                 */
-                video.setTitle(cells.item(titleColumnNumber).getFirstChild().getTextContent());
+                error = false;
 
-                /**
-                 * Seting ACTORS
-                 */
-                if (actorsColumnNumber <= 256) {
-                    String actors = cells.item(actorsColumnNumber).getFirstChild().getTextContent();
-                    String[] actorsSplited = actors.split(", ");
-                    video.setActors(Arrays.asList(actorsSplited));
-                }
+                NodeList cells = rows.item(m).getChildNodes();
 
                 /**
-                 * Setting DIRECTORS
+                 * If one cell in row is empty, the program won't import the
+                 * whole line(row).
                  */
-                if (directorsColumnNumber <= 256) {
-                    String directors = cells.item(directorsColumnNumber).getFirstChild().getTextContent();
-                    String[] directorsSplited = directors.split(", ");
-                    video.setDirectors(Arrays.asList(directorsSplited));
-                }
+                if (cells.item(actorsColumnNumber).getFirstChild() == null
+                        || cells.item(titleColumnNumber).getFirstChild() == null
+                        || cells.item(directorsColumnNumber).getFirstChild() == null
+                        || cells.item(yearColumnNumber).getFirstChild() == null
+                        || cells.item(ratingColumnNumber).getFirstChild() == null
+                        || cells.item(genresColumnNumber).getFirstChild() == null
+                        || cells.item(countryColumnNumber).getFirstChild() == null) {
+                    error = true;
 
-                /**
-                 * Setting YEAR
-                 */
-                if (yearColumnNumber <= 256) {
-                    int year = 9999;
-                    try {
-                        year = Integer.parseInt(cells.item(yearColumnNumber).getFirstChild().getTextContent());
-                    } catch (DOMException | NumberFormatException ex) {
-                        error = true;
-                        log.error("Year is not a number - reading XML");
-                        System.err.println("Year is not a number");
+                    log.error("At least one cell in row number " + (m + 1) + " is empty");
+                    System.err.println("At least one cell in row number " + (m + 1) + " is empty");
+                } else {
+                    
+                    Video video = new Video();
+
+                    /**
+                     * Setting TITLE
+                     */
+                    video.setTitle(cells.item(titleColumnNumber).getFirstChild().getTextContent());
+
+                    /**
+                     * Seting ACTORS
+                     */
+                    if (actorsColumnNumber <= 256) {
+                        String actors = cells.item(actorsColumnNumber).getFirstChild().getTextContent();
+                        String[] actorsSplited = actors.split(", ");
+                        video.setActors(Arrays.asList(actorsSplited));
                     }
-                    if (year < 2100) {
-                        video.setYear(year);
-                    }
-                }
 
-
-                /**
-                 * Setting RATING
-                 */
-                if (ratingColumnNumber <= 256) {
-                    int rating = 15;
-                    try {
-                        rating = Integer.parseInt(cells.item(ratingColumnNumber).getFirstChild().getTextContent());
-                    } catch (DOMException | NumberFormatException ex) {
-                        error = true;
-                        log.error("Rating is not a number - reading XML");
-                        System.err.println("Rating is not a number");
+                    /**
+                     * Setting DIRECTORS
+                     */
+                    if (directorsColumnNumber <= 256) {
+                        String directors = cells.item(directorsColumnNumber).getFirstChild().getTextContent();
+                        String[] directorsSplited = directors.split(", ");
+                        video.setDirectors(Arrays.asList(directorsSplited));
                     }
-                    if (rating < 11) {
-                        video.setRating(rating);
-                    }
-                }
 
-                /**
-                 * Setting GENRES
-                 */
-                if (genresColumnNumber <= 256) {
-                    String genres = cells.item(genresColumnNumber).getFirstChild().getTextContent();
-                    String[] genresSplited = genres.split(", ");
-                    List<Genre> genresList = new ArrayList();
-                    for (int i = 0; i < genresSplited.length; i++) {
-                        switch (genresSplited[i].toLowerCase()) {
-                            case "action":
-                                genresList.add(Genre.ACTION);
-                                break;
-                            case "adventure":
-                                genresList.add(Genre.ADVENTURE);
-                                break;
-                            case "animation":
-                                genresList.add(Genre.ANIMATION);
-                                break;
-                            case "biography":
-                                genresList.add(Genre.BIOGRAPHY);
-                                break;
-                            case "comedy":
-                                genresList.add(Genre.COMEDY);
-                                break;
-                            case "crime":
-                                genresList.add(Genre.CRIME);
-                                break;
-                            case "doc":
-                            case "document":
-                            case "documentary":
-                                genresList.add(Genre.DOCUMENTARY);
-                                break;
-                            case "drama":
-                                genresList.add(Genre.DRAMA);
-                                break;
-                            case "family":
-                                genresList.add(Genre.FAMILY);
-                                break;
-                            case "fantasy":
-                                genresList.add(Genre.FANTASY);
-                                break;
-                            case "history":
-                                genresList.add(Genre.HISTORY);
-                                break;
-                            case "horror":
-                                genresList.add(Genre.HORROR);
-                                break;
-                            case "music":
-                                genresList.add(Genre.MUSIC);
-                                break;
-                            case "musical":
-                                genresList.add(Genre.MUSICAL);
-                                break;
-                            case "mystery":
-                                genresList.add(Genre.MYSTERY);
-                                break;
-                            case "romance":
-                                genresList.add(Genre.ROMANCE);
-                                break;
-                            case "sci-fi":
-                                genresList.add(Genre.SCIENCE_FICTION);
-                                break;
-                            case "sport":
-                                genresList.add(Genre.SPORT);
-                                break;
-                            case "thriller":
-                                genresList.add(Genre.THRILLER);
-                                break;
-                            case "war":
-                                genresList.add(Genre.WAR);
-                                break;
-                            case "western":
-                                genresList.add(Genre.WESTERN);
-                                break;
-                            default:
-                                error = true;
-                                log.error("Unknown genre - reading XML");
-                                System.err.println("Unknown genre");
+                    /**
+                     * Setting YEAR
+                     */
+                    if (yearColumnNumber <= 256) {
+                        int year = 9999;
+                        try {
+                            year = Integer.parseInt(cells.item(yearColumnNumber).getFirstChild().getTextContent());
+                        } catch (DOMException | NumberFormatException ex) {
+                            error = true;
+                            log.error("Year is not a number - reading XML");
+                            System.err.println("Year is not a number");
+                        }
+                        if (year < 2100) {
+                            video.setYear(year);
+                        } else {
+                            error = true;
+                            log.error("Year is not less than 2100 - reading XML");
+                            System.err.println("Year is not less than 2100");
                         }
                     }
-                    video.setGenres(genresList);
 
-                }
 
-                /**
-                 * Setting COUNTRIES
-                 */
-                if (countryColumnNumber <= 256) {
-                    String countries = cells.item(countryColumnNumber).getFirstChild().getTextContent();
-                    String[] countriesSplited = countries.split(", ");
-                    video.setCountries(Arrays.asList(countriesSplited));
+                    /**
+                     * Setting RATING
+                     */
+                    if (ratingColumnNumber <= 256) {
+                        int rating = 15;
+                        try {
+                            rating = Integer.parseInt(cells.item(ratingColumnNumber).getFirstChild().getTextContent());
+                        } catch (DOMException | NumberFormatException ex) {
+                            error = true;
+                            log.error("Rating is not a number - reading XML");
+                            System.err.println("Rating is not a number");
+                        }
+                        if (rating < 11) {
+                            video.setRating(rating);
+                        } else {
+                            error = true;
+                            log.error("Rating is not less than 11 - reading XML");
+                            System.err.println("Rating is not less than 11");
+                        }
+                    }
+
+                    /**
+                     * Setting GENRES
+                     */
+                    if (genresColumnNumber <= 256) {
+                        String genres = cells.item(genresColumnNumber).getFirstChild().getTextContent();
+                        String[] genresSplited = genres.split(", ");
+                        List<Genre> genresList = new ArrayList();
+                        for (int i = 0; i < genresSplited.length; i++) {
+                            switch (genresSplited[i].toLowerCase()) {
+                                case "action":
+                                    genresList.add(Genre.ACTION);
+                                    break;
+                                case "adventure":
+                                    genresList.add(Genre.ADVENTURE);
+                                    break;
+                                case "animation":
+                                    genresList.add(Genre.ANIMATION);
+                                    break;
+                                case "biography":
+                                    genresList.add(Genre.BIOGRAPHY);
+                                    break;
+                                case "comedy":
+                                    genresList.add(Genre.COMEDY);
+                                    break;
+                                case "crime":
+                                    genresList.add(Genre.CRIME);
+                                    break;
+                                case "doc":
+                                case "document":
+                                case "documentary":
+                                    genresList.add(Genre.DOCUMENTARY);
+                                    break;
+                                case "drama":
+                                    genresList.add(Genre.DRAMA);
+                                    break;
+                                case "family":
+                                    genresList.add(Genre.FAMILY);
+                                    break;
+                                case "fantasy":
+                                    genresList.add(Genre.FANTASY);
+                                    break;
+                                case "history":
+                                    genresList.add(Genre.HISTORY);
+                                    break;
+                                case "horror":
+                                    genresList.add(Genre.HORROR);
+                                    break;
+                                case "music":
+                                    genresList.add(Genre.MUSIC);
+                                    break;
+                                case "musical":
+                                    genresList.add(Genre.MUSICAL);
+                                    break;
+                                case "mystery":
+                                    genresList.add(Genre.MYSTERY);
+                                    break;
+                                case "romance":
+                                    genresList.add(Genre.ROMANCE);
+                                    break;
+                                case "sci-fi":
+                                    genresList.add(Genre.SCIENCE_FICTION);
+                                    break;
+                                case "sport":
+                                    genresList.add(Genre.SPORT);
+                                    break;
+                                case "thriller":
+                                    genresList.add(Genre.THRILLER);
+                                    break;
+                                case "war":
+                                    genresList.add(Genre.WAR);
+                                    break;
+                                case "western":
+                                    genresList.add(Genre.WESTERN);
+                                    break;
+                                default:
+                                    error = true;
+                                    log.error("Unknown genre - reading XML");
+                                    System.err.println("Unknown genre");
+                            }
+                        }
+                        video.setGenres(genresList);
+
+                    }
+
+                    /**
+                     * Setting COUNTRIES
+                     */
+                    if (countryColumnNumber <= 256) {
+                        String countries = cells.item(countryColumnNumber).getFirstChild().getTextContent();
+                        String[] countriesSplited = countries.split(", ");
+                        video.setCountries(Arrays.asList(countriesSplited));
+                    }
+
+                    if (error == false) {
+                        videos.add(video);
+                    }
                 }
-                videos.add(video);
             }
+
         }
     }
 }
