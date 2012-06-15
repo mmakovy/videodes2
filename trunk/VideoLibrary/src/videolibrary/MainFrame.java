@@ -762,7 +762,11 @@ public class MainFrame extends javax.swing.JFrame {
         dialog.setVisible(true);
         if (dialog.getResult() != null) {
             ExportManagement em = new ExportManagementImpl();
-            em.exportToOdf(new File(dialog.getResult()));
+            em.setList(videoManagerImpl.getAllVideos());
+            if (em.exportToOdf(new File(dialog.getResult()))) {
+                JOptionPane.showMessageDialog(this, "Successfully exported to " + dialog.getResult(), "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else JOptionPane.showMessageDialog(this, "Export to " + dialog.getResult() + " failed", "Failed", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_exportToODFButtonActionPerformed
 
