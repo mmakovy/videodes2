@@ -112,7 +112,6 @@ public class ImportManagementImpl implements ImportManagement {
 
     @Override
     public Document openXML(File file) {
-
         if (file == null) {
             globalError = true;
             log.error("Error opening XML, file is null");
@@ -196,7 +195,6 @@ public class ImportManagementImpl implements ImportManagement {
 
             }
         }
-
         /**
          * Do we have all needed columns in ODS file ?
          */
@@ -210,7 +208,7 @@ public class ImportManagementImpl implements ImportManagement {
             //System.err.println("At least one column is missing");
             throw new IllegalArgumentException();
         } else {
-
+            System.err.println(rows.getLength());
             for (int m = 1; m < rows.getLength() - 2; m++) {
 
                 boolean localError = false;
@@ -221,6 +219,7 @@ public class ImportManagementImpl implements ImportManagement {
                  * If one cell in row is empty, the program won't import the
                  * whole line(row).
                  */
+                
                 if (cells.item(actorsColumnNumber).getFirstChild() == null
                         || cells.item(titleColumnNumber).getFirstChild() == null
                         || cells.item(directorsColumnNumber).getFirstChild() == null
@@ -234,7 +233,6 @@ public class ImportManagementImpl implements ImportManagement {
                     log.error("At least one cell in row number " + (m + 1) + " is empty");
                     //System.err.println("At least one cell in row number " + (m + 1) + " is empty");
                 } else {
-                    
                     Video video = new Video();
 
                     /**
@@ -245,6 +243,7 @@ public class ImportManagementImpl implements ImportManagement {
                     /**
                      * Setting ACTORS
                      */
+                    
                     if (actorsColumnNumber <= 256) {
                         String actors = cells.item(actorsColumnNumber).getFirstChild().getTextContent();
                         String[] actorsSplited = actors.split(", ");
@@ -254,6 +253,7 @@ public class ImportManagementImpl implements ImportManagement {
                     /**
                      * Setting DIRECTORS
                      */
+                    
                     if (directorsColumnNumber <= 256) {
                         String directors = cells.item(directorsColumnNumber).getFirstChild().getTextContent();
                         String[] directorsSplited = directors.split(", ");
@@ -263,7 +263,9 @@ public class ImportManagementImpl implements ImportManagement {
                     /**
                      * Setting YEAR
                      */
+                    
                     if (yearColumnNumber <= 256) {
+                        System.err.println(cells.item(yearColumnNumber).getFirstChild().getTextContent());
                         int year = 9999;
                         try {
                             year = Integer.parseInt(cells.item(yearColumnNumber).getFirstChild().getTextContent());
@@ -400,7 +402,7 @@ public class ImportManagementImpl implements ImportManagement {
                         String[] countriesSplited = countries.split(", ");
                         video.setCountries(Arrays.asList(countriesSplited));
                     }
-
+                    
                     if (localError == false) {
                         videos.add(video);
                     }
