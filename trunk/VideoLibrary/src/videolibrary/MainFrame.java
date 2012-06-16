@@ -109,8 +109,6 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator13 = new javax.swing.JToolBar.Separator();
         jLabel1 = new javax.swing.JLabel();
         jSeparator15 = new javax.swing.JToolBar.Separator();
-        searchByIdButton = new javax.swing.JButton();
-        jSeparator8 = new javax.swing.JToolBar.Separator();
         searchByTitleButton = new javax.swing.JButton();
         jSeparator7 = new javax.swing.JToolBar.Separator();
         searchByDirectorButton = new javax.swing.JButton();
@@ -141,7 +139,6 @@ public class MainFrame extends javax.swing.JFrame {
         deleteVideoMenuButton = new javax.swing.JMenuItem();
         getAllVideosMenuButton = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        searchByIdMenuItem = new javax.swing.JMenuItem();
         searchByTitleMenuItem = new javax.swing.JMenuItem();
         searchByDirectorMenuItem = new javax.swing.JMenuItem();
         searchByActorMenuItem = new javax.swing.JMenuItem();
@@ -198,18 +195,6 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1.setText("Search by:");
         toolBar.add(jLabel1);
         toolBar.add(jSeparator15);
-
-        searchByIdButton.setText("Id");
-        searchByIdButton.setFocusable(false);
-        searchByIdButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        searchByIdButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        searchByIdButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchByIdButtonActionPerformed(evt);
-            }
-        });
-        toolBar.add(searchByIdButton);
-        toolBar.add(jSeparator8);
 
         searchByTitleButton.setText("Title");
         searchByTitleButton.setFocusable(false);
@@ -376,14 +361,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jMenu1.setText("Search by ...");
 
-        searchByIdMenuItem.setText("Id");
-        searchByIdMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchByIdMenuItemActionPerformed(evt);
-            }
-        });
-        jMenu1.add(searchByIdMenuItem);
-
         searchByTitleMenuItem.setText("Title");
         searchByTitleMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -484,27 +461,6 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addVideoButtonActionPerformed
 
-    private void searchByIdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByIdButtonActionPerformed
-        SearchNumberDialog dialog = new SearchNumberDialog(this, true);
-        final Toolkit toolkit = Toolkit.getDefaultToolkit();
-        final Dimension screenSize = toolkit.getScreenSize();
-        final int x = (screenSize.width - dialog.getWidth()) / 2;
-        final int y = (screenSize.height - dialog.getHeight()) / 2;
-        dialog.setLocation(x, y);
-        dialog.setText("id");
-        dialog.setVisible(true);
-        if (dialog.getResult() != -1) {
-            Video video = videoManagerImpl.getVideoById(dialog.getResult());
-            if (video != null) {
-                tableModel.removeAll();
-                tableModel.addVideo(video);
-                numberOfVideosLabel.setText("" + tableModel.getRowCount());
-            } else {
-                JOptionPane.showMessageDialog(this, "Video with id " + dialog.getResult() + " not found", "Not found", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_searchByIdButtonActionPerformed
-
     private void exitMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuButtonActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuButtonActionPerformed
@@ -524,10 +480,6 @@ public class MainFrame extends javax.swing.JFrame {
     private void addVideoMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVideoMenuButtonActionPerformed
         addVideoButtonActionPerformed(evt);
     }//GEN-LAST:event_addVideoMenuButtonActionPerformed
-
-    private void searchByIdMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByIdMenuItemActionPerformed
-        searchByIdButtonActionPerformed(evt);
-    }//GEN-LAST:event_searchByIdMenuItemActionPerformed
 
     private void searchByTitleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByTitleMenuItemActionPerformed
         searchByTitleButtonActionPerformed(evt);
@@ -729,7 +681,7 @@ public class MainFrame extends javax.swing.JFrame {
         dialog.setVisible(true);
         if (dialog.getResult() != null) {
             ExportManagement em = new ExportManagementImpl();
-            em.setList(videoManagerImpl.getAllVideos());
+            em.setList(tableModel.getAllVideos());
             if (em.exportToOdf(new File(dialog.getResult()))) {
                 JOptionPane.showMessageDialog(this, "Successfully exported to " + dialog.getResult(), "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -954,7 +906,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar.Separator jSeparator6;
     private javax.swing.JToolBar.Separator jSeparator7;
-    private javax.swing.JToolBar.Separator jSeparator8;
     private javax.swing.JToolBar.Separator jSeparator9;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel numberOfVideosLabel;
@@ -967,8 +918,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem searchByDirectorMenuItem;
     private javax.swing.JButton searchByGenreButton;
     private javax.swing.JMenuItem searchByGenreMenuItem;
-    private javax.swing.JButton searchByIdButton;
-    private javax.swing.JMenuItem searchByIdMenuItem;
     private javax.swing.JButton searchByTitleButton;
     private javax.swing.JMenuItem searchByTitleMenuItem;
     private javax.swing.JButton searchByYearButton;

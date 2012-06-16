@@ -5,6 +5,7 @@
 package videolibrary;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -16,7 +17,11 @@ import javax.swing.table.AbstractTableModel;
 public class VideoTableModel extends AbstractTableModel {
 
     private List<Video> videos = new ArrayList<Video>();
-
+    
+    public List<Video> getAllVideos() {
+        return Collections.unmodifiableList(videos);
+    }
+    
     @Override
     public int getRowCount() {
         return videos.size();

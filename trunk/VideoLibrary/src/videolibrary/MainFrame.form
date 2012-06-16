@@ -69,14 +69,6 @@
                 <Property name="text" type="java.lang.String" value="Search by ..."/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="searchByIdMenuItem">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Id"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchByIdMenuItemActionPerformed"/>
-                  </Events>
-                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="searchByTitleMenuItem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Title"/>
@@ -246,19 +238,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JToolBar$Separator" name="jSeparator15">
-        </Component>
-        <Component class="javax.swing.JButton" name="searchByIdButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Id"/>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchByIdButtonActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JToolBar$Separator" name="jSeparator8">
         </Component>
         <Component class="javax.swing.JButton" name="searchByTitleButton">
           <Properties>
