@@ -25,27 +25,29 @@ import org.xml.sax.SAXException;
 public class ImportManagementImpl implements ImportManagement {
 
     private List<Video> videos = null;
-    private boolean error = false;
+    private boolean globalError = false;
+    private boolean found = true;
     final static Logger log = LoggerFactory.getLogger(ImportManagementImpl.class);
 
     public boolean getError() {
-        return error;
+        return globalError;
     }
 
+    @Override
     public List<Video> getVideos() {
         return Collections.unmodifiableList(videos);
     }
 
     @Override
-    public void importFromOdf(File file) {
+    public void importFromOdf(File file) throws FileNotFoundException, IOException{
         readXML(openXML(unzipper(file)));
     }
 
     @Override
-    public File unzipper(File file) {
+    public File unzipper(File file) throws FileNotFoundException, IOException{
 
         if (file == null) {
-            error = true;
+            globalError = true;
             log.error("Error unzipping ODS, file is null");
             throw new IllegalArgumentException("File is null");
         }
@@ -75,26 +77,24 @@ public class ImportManagementImpl implements ImportManagement {
 
 
             return new File(file.getName() + "_content.xml");
-
-
-        } catch (FileNotFoundException ex) {
+        } /*catch (FileNotFoundException ex) {
             error = true;
-            log.error("Error when unzipping ODS", ex);
-            System.err.println("File not found");
+            log.error("File not found", ex);
+            found = false;
             return null;
         } catch (IOException ex) {
             error = true;
             log.error("Error when unzipping ODS", ex);
             System.err.println("IO error");
             return null;
-        } finally {
+        } */finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException ex) {
-                    error = true;
+                    globalError = true;
                     log.error("Error when closing stream", ex);
-                    System.err.println("Error when closing inputstream");
+                    //System.err.println("Error when closing inputstream");
                 }
             }
 
@@ -102,9 +102,9 @@ public class ImportManagementImpl implements ImportManagement {
                 try {
                     out.close();
                 } catch (IOException ex) {
-                    error = true;
+                    globalError = true;
                     log.error("Error when closing stream", ex);
-                    System.err.println("Error when closing outputstream");
+                    //System.err.println("Error when closing outputstream");
                 }
             }
         }
@@ -114,9 +114,9 @@ public class ImportManagementImpl implements ImportManagement {
     public Document openXML(File file) {
 
         if (file == null) {
-            error = true;
+            globalError = true;
             log.error("Error opening XML, file is null");
-            throw new IllegalArgumentException("File is null");
+            return null;
         }
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -125,19 +125,19 @@ public class ImportManagementImpl implements ImportManagement {
             Document doc = builder.parse(file);
             return doc;
         } catch (ParserConfigurationException ex) {
-            error = true;
+            globalError = true;
             log.error("Error when opening XML", ex);
-            System.err.println("Parser Configuration fault. Error when opening XML");
+            //System.err.println("Parser Configuration fault. Error when opening XML");
             return null;
         } catch (SAXException ex) {
-            error = true;
+            globalError = true;
             log.error("Error when opening XML", ex);
-            System.err.println("SAX Exeption. Error when opening XML");
+            //System.err.println("SAX Exeption. Error when opening XML");
             return null;
         } catch (IOException ex) {
-            error = true;
+            globalError = true;
             log.error("Error when opening XML", ex);
-            System.err.println("IO Exception. Error when opening XML");
+            //System.err.println("IO Exception. Error when opening XML");
             return null;
         }
 
@@ -145,12 +145,12 @@ public class ImportManagementImpl implements ImportManagement {
     }
 
     @Override
-    public void readXML(Document doc) {
+    public void readXML(Document doc) throws IllegalArgumentException {
         videos = new ArrayList<Video>();
         if (doc == null) {
-            error = true;
+            globalError = true;
             log.error("Variable doc is null - reading XML");
-            throw new IllegalArgumentException("Variabile DOC is null");
+            return;
         }
 
         int titleColumnNumber = 300;
@@ -203,14 +203,15 @@ public class ImportManagementImpl implements ImportManagement {
                 || yearColumnNumber == 300 || yearColumnNumber == 300
                 || genresColumnNumber == 300 || countryColumnNumber == 300) {
 
-            error = true;
+            globalError = true;
             log.error("At least one column is missing");
-            System.err.println("At least one column is missing");
+            //System.err.println("At least one column is missing");
+            throw new IllegalArgumentException();
         } else {
 
             for (int m = 1; m < rows.getLength() - 2; m++) {
 
-                error = false;
+                boolean localError = false;
 
                 NodeList cells = rows.item(m).getChildNodes();
 
@@ -225,10 +226,11 @@ public class ImportManagementImpl implements ImportManagement {
                         || cells.item(ratingColumnNumber).getFirstChild() == null
                         || cells.item(genresColumnNumber).getFirstChild() == null
                         || cells.item(countryColumnNumber).getFirstChild() == null) {
-                    error = true;
+                    globalError = true;
+                    localError = true;
 
                     log.error("At least one cell in row number " + (m + 1) + " is empty");
-                    System.err.println("At least one cell in row number " + (m + 1) + " is empty");
+                    //System.err.println("At least one cell in row number " + (m + 1) + " is empty");
                 } else {
                     
                     Video video = new Video();
@@ -239,7 +241,7 @@ public class ImportManagementImpl implements ImportManagement {
                     video.setTitle(cells.item(titleColumnNumber).getFirstChild().getTextContent());
 
                     /**
-                     * Seting ACTORS
+                     * Setting ACTORS
                      */
                     if (actorsColumnNumber <= 256) {
                         String actors = cells.item(actorsColumnNumber).getFirstChild().getTextContent();
@@ -264,16 +266,18 @@ public class ImportManagementImpl implements ImportManagement {
                         try {
                             year = Integer.parseInt(cells.item(yearColumnNumber).getFirstChild().getTextContent());
                         } catch (DOMException | NumberFormatException ex) {
-                            error = true;
+                            globalError = true;
+                            localError = true;
                             log.error("Year is not a number - reading XML");
-                            System.err.println("Year is not a number");
+                            //System.err.println("Year is not a number");
                         }
                         if (year < 2100) {
                             video.setYear(year);
                         } else {
-                            error = true;
+                            globalError = true;
+                            localError = true;
                             log.error("Year is not less than 2100 - reading XML");
-                            System.err.println("Year is not less than 2100");
+                            //System.err.println("Year is not less than 2100");
                         }
                     }
 
@@ -286,16 +290,18 @@ public class ImportManagementImpl implements ImportManagement {
                         try {
                             rating = Integer.parseInt(cells.item(ratingColumnNumber).getFirstChild().getTextContent());
                         } catch (DOMException | NumberFormatException ex) {
-                            error = true;
+                            globalError = true;
+                            localError = true;
                             log.error("Rating is not a number - reading XML");
-                            System.err.println("Rating is not a number");
+                            //System.err.println("Rating is not a number");
                         }
                         if (rating < 11) {
                             video.setRating(rating);
                         } else {
-                            error = true;
+                            globalError = true;
+                            localError = true;
                             log.error("Rating is not less than 11 - reading XML");
-                            System.err.println("Rating is not less than 11");
+                            //System.err.println("Rating is not less than 11");
                         }
                     }
 
@@ -374,9 +380,10 @@ public class ImportManagementImpl implements ImportManagement {
                                     genresList.add(Genre.WESTERN);
                                     break;
                                 default:
-                                    error = true;
+                                    globalError = true;
+                                    localError = true;
                                     log.error("Unknown genre - reading XML");
-                                    System.err.println("Unknown genre");
+                                    //System.err.println("Unknown genre");
                             }
                         }
                         video.setGenres(genresList);
@@ -392,7 +399,7 @@ public class ImportManagementImpl implements ImportManagement {
                         video.setCountries(Arrays.asList(countriesSplited));
                     }
 
-                    if (error == false) {
+                    if (localError == false) {
                         videos.add(video);
                     }
                 }
