@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -635,19 +637,14 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_getAllVideosMenuButtonActionPerformed
 
     private void importFromODFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importFromODFButtonActionPerformed
-        SearchStringDialog dialog = new SearchStringDialog(this, true);
-        dialog.setText("filename");
-        dialog.setTitleText("Import from ODF file");
-        final Toolkit toolkit = Toolkit.getDefaultToolkit();
-        final Dimension screenSize = toolkit.getScreenSize();
-        final int x = (screenSize.width - dialog.getWidth()) / 2;
-        final int y = (screenSize.height - dialog.getHeight()) / 2;
-        dialog.setLocation(x, y);
-        dialog.setVisible(true);
-        if (dialog.getResult() != null) {
+        JFileChooser dialog = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("ODS files","ods");
+        dialog.setFileFilter(filter);
+        int returnVal = dialog.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             ImportManagement im = new ImportManagementImpl();
             try {
-                im.importFromOdf(new File(dialog.getResult()));
+                im.importFromOdf(dialog.getSelectedFile());
                 if (im.getVideos() != null) {
                     for (Video v : im.getVideos()) {
                         tableModel.addVideo(v);
@@ -659,33 +656,27 @@ public class MainFrame extends javax.swing.JFrame {
                     }
                 }
             } catch (IllegalArgumentException ex) {
-                JOptionPane.showMessageDialog(this, "At least one column is missing in file " + dialog.getResult(), "Missing Column", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "At least one column is missing in file " + dialog.getSelectedFile().getName(), "Missing Column", JOptionPane.ERROR_MESSAGE);
             } catch (FileNotFoundException ex) {
-                JOptionPane.showMessageDialog(this, "File " + dialog.getResult() + " not found", "File not found", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "File " + dialog.getSelectedFile().getName() + " not found", "File not found", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "I/O Error (" + dialog.getResult() + ")", "I/O Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "I/O Error (" + dialog.getSelectedFile().getName() + ")", "I/O Error", JOptionPane.ERROR_MESSAGE);
             }
-
         }
     }//GEN-LAST:event_importFromODFButtonActionPerformed
 
     private void exportToODFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportToODFButtonActionPerformed
-        SearchStringDialog dialog = new SearchStringDialog(this, true);
-        dialog.setText("filename");
-        dialog.setTitleText("Export to ODF file");
-        final Toolkit toolkit = Toolkit.getDefaultToolkit();
-        final Dimension screenSize = toolkit.getScreenSize();
-        final int x = (screenSize.width - dialog.getWidth()) / 2;
-        final int y = (screenSize.height - dialog.getHeight()) / 2;
-        dialog.setLocation(x, y);
-        dialog.setVisible(true);
-        if (dialog.getResult() != null) {
+        JFileChooser dialog = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("ODS files","ods");
+        dialog.setFileFilter(filter);
+        int returnVal = dialog.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             ExportManagement em = new ExportManagementImpl();
             em.setList(tableModel.getAllVideos());
-            if (em.exportToOdf(new File(dialog.getResult()))) {
-                JOptionPane.showMessageDialog(this, "Successfully exported to " + dialog.getResult(), "Success", JOptionPane.INFORMATION_MESSAGE);
+            if (em.exportToOdf(dialog.getSelectedFile())) {
+                JOptionPane.showMessageDialog(this, "Successfully exported to " + dialog.getSelectedFile().getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Export to " + dialog.getResult() + " failed", "Failed", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Export to " + dialog.getSelectedFile().getName() + " failed", "Failed", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_exportToODFButtonActionPerformed
