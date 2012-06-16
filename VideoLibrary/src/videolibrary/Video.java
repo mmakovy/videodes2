@@ -7,11 +7,13 @@ package videolibrary;
 import java.util.List;
 import java.util.Objects;
 
-/** 
+/**
+ * Represents object Video
  *
  * @author Andrej
  */
 public class Video {
+
     private int id;
     private String title;
     private List<String> directors;
@@ -69,8 +71,6 @@ public class Video {
         this.id = id;
     }
 
-
-
     public String getTitle() {
         return title;
     }
@@ -112,10 +112,4 @@ public class Video {
         hash = 79 * hash + Objects.hashCode(this.title);
         return hash;
     }
-
-
-
-
-
-      
 }

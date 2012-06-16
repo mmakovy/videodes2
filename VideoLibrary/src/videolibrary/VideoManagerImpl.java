@@ -30,6 +30,9 @@ public class VideoManagerImpl implements VideoManager {
     private static Context context = new Context();
     XMLValidator xmlValidator = new XMLValidator();
 
+    /*
+     * test if the DB is empty
+     */
     public boolean emptyDB() {
         String test = null;
         try {
@@ -45,18 +48,21 @@ public class VideoManagerImpl implements VideoManager {
         return test.equals("");
     }
 
+    /*
+     * removes duplicate elements from list
+     */
     public static List removeDuplicates(List list) {
         for (int i = 0; i < list.size(); i++) {
-                for (int j = 0; j < list.size(); j++) {
-                    if (i == j) {
-                    } else if (list.get(j).equals(list.get(i))) {
-                        list.remove(j);
-                    }
+            for (int j = 0; j < list.size(); j++) {
+                if (i == j) {
+                } else if (list.get(j).equals(list.get(i))) {
+                    list.remove(j);
                 }
+            }
         }
         return Collections.unmodifiableList(list);
     }
-    
+
     @Override
     public boolean addVideo(Video video) {
         if (video == null) {
@@ -80,6 +86,9 @@ public class VideoManagerImpl implements VideoManager {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         int id = 0;
+        /*
+         * setting the id - if DB is empty, id = 1, else id = max id from db + 1
+         */
         if (result.length() < 1) {
             id = 1;
             video.setId(id);
@@ -94,7 +103,9 @@ public class VideoManagerImpl implements VideoManager {
                 Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+        /*
+         * transformation from object Video to XML and adding to DB
+         */
         XStream x = new XStream(new DomDriver());
         x.registerConverter(new VideoConverter());
         x.alias("video", Video.class);
@@ -142,6 +153,9 @@ public class VideoManagerImpl implements VideoManager {
         } catch (BaseXException ex) {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /*
+         * parsing videos from one string into object Video
+         */
         String[] videos = result.split("</video>");
         XStream x = new XStream(new DomDriver());
         x.registerConverter(new VideoConverter());
@@ -200,7 +214,9 @@ public class VideoManagerImpl implements VideoManager {
         } catch (BaseXException ex) {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        /*
+         * search in DB with fulltext search
+         */
         String result = null;
         try {
             result = (new XQuery(
@@ -216,6 +232,9 @@ public class VideoManagerImpl implements VideoManager {
         if (result.equals("")) {
             return null;
         }
+        /*
+         * parsing from string into Video
+         */
         String[] videos = result.split("</video>");
         XStream x = new XStream(new DomDriver());
         x.registerConverter(new VideoConverter());
@@ -246,7 +265,9 @@ public class VideoManagerImpl implements VideoManager {
         } catch (BaseXException ex) {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        /*
+         * search in db
+         */
         String result = null;
         try {
             result = (new XQuery(
@@ -266,8 +287,6 @@ public class VideoManagerImpl implements VideoManager {
         XStream x = new XStream(new DomDriver());
         x.registerConverter(new VideoConverter());
         x.alias("video", Video.class);
-
-
 
         try {
             BaseXDriver.closeCollection(context);
@@ -290,6 +309,9 @@ public class VideoManagerImpl implements VideoManager {
         } catch (BaseXException ex) {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /*
+         * search in db with fulltext search
+         */
         String result = null;
         try {
             result = (new XQuery(
@@ -304,6 +326,9 @@ public class VideoManagerImpl implements VideoManager {
         if (result.equals("")) {
             return null;
         }
+        /*
+         * parsing from string into object Video
+         */
         String[] videos = result.split("</video>");
         XStream x = new XStream(new DomDriver());
         x.registerConverter(new VideoConverter());
@@ -338,7 +363,9 @@ public class VideoManagerImpl implements VideoManager {
         }
 
         String result = null;
-
+        /*
+         * fulltext search in db
+         */
         try {
             result = (new XQuery("for $video in (collection('VideoDes2DB')//video) return (for $director in $video/directors/director let $lower_name := lower-case($director) where contains($lower_name,'" + lowerName + "') return $video)").execute(context));
         } catch (BaseXException ex) {
@@ -347,6 +374,9 @@ public class VideoManagerImpl implements VideoManager {
         if (result.equals("")) {
             return null;
         }
+        /*
+         * parsing from string into object Video
+         */
         String[] videos = result.split("</video>");
         XStream x = new XStream(new DomDriver());
         x.registerConverter(new VideoConverter());
@@ -380,7 +410,9 @@ public class VideoManagerImpl implements VideoManager {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         String result = null;
-
+        /*
+         * search in db with fulltext search
+         */
         try {
             result = (new XQuery("for $video in (collection('VideoDes2DB')//video) return (for $actor in $video/actors/actor let $lower_name := lower-case($actor) where contains($lower_name,'" + lowerName + "') return $video)").execute(context));
         } catch (BaseXException ex) {
@@ -389,6 +421,9 @@ public class VideoManagerImpl implements VideoManager {
         if (result.equals("")) {
             return null;
         }
+        /*
+         * parsing from string into object Video
+         */
         String[] videos = result.split("</video>");
         XStream x = new XStream(new DomDriver());
         x.registerConverter(new VideoConverter());
@@ -421,7 +456,9 @@ public class VideoManagerImpl implements VideoManager {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         String result = null;
-
+        /*
+         * search in db
+         */
         try {
             result = (new XQuery("for $video in (collection('VideoDes2DB')//video) return (for $genre in $video/genres/genre where $genre = '" + genre + "' return $video)").execute(context));
         } catch (BaseXException ex) {
@@ -430,6 +467,9 @@ public class VideoManagerImpl implements VideoManager {
         if (result.equals("")) {
             return null;
         }
+        /*
+         * parsing from string into Video
+         */
         String[] videos = result.split("</video>");
         XStream x = new XStream(new DomDriver());
         x.registerConverter(new VideoConverter());
@@ -463,7 +503,9 @@ public class VideoManagerImpl implements VideoManager {
             Logger.getLogger(VideoManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         String result = null;
-
+        /*
+         * search in db fulltext
+         */
         try {
             result = (new XQuery("for $video in (collection('VideoDes2DB')//video) return (for $country in $video/countries/country let $lower_name := lower-case($country) where contains($lower_name,'" + lowerName + "') return $video)").execute(context));
         } catch (BaseXException ex) {
@@ -472,6 +514,9 @@ public class VideoManagerImpl implements VideoManager {
         if (result.equals("")) {
             return null;
         }
+        /*
+         * parsing from string into video
+         */
         String[] videos = result.split("</video>");
         XStream x = new XStream(new DomDriver());
         x.registerConverter(new VideoConverter());

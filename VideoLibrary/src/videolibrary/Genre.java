@@ -5,10 +5,12 @@
 package videolibrary;
 
 /**
+ * Represents all the genres
  *
  * @author Andrej
  */
 public enum Genre {
+
     ACTION,
     ADVENTURE,
     ANIMATION,
