@@ -341,6 +341,18 @@ public class AddVideoDialog extends javax.swing.JDialog {
                JOptionPane.showMessageDialog(this, "No genres selected","No genres", JOptionPane.ERROR_MESSAGE);
                return false;
            }
+           if (getTextField(directorsTextField).isEmpty()) {
+               JOptionPane.showMessageDialog(this, "Directors field is not valid","No directors", JOptionPane.ERROR_MESSAGE);
+               return false;
+           }
+           if (getTextField(actorsTextField).isEmpty()) {
+               JOptionPane.showMessageDialog(this, "Actors field is not valid","No actors", JOptionPane.ERROR_MESSAGE);
+               return false;
+           }
+           if (getTextField(countryTextField).isEmpty()) {
+               JOptionPane.showMessageDialog(this, "Countries field is not valid","No countries", JOptionPane.ERROR_MESSAGE);
+               return false;
+           }
            return true;
         }
     }
@@ -361,10 +373,12 @@ public class AddVideoDialog extends javax.swing.JDialog {
         List<String> temp = new ArrayList<String>();
         String input = tf.getText();
         String parse[] = input.split(",");
+        List<String> parsed = new ArrayList<String>();
         for (int i = 0; i < parse.length; i++) {
             parse[i] = parse[i].trim();
+            if (!parse[i].equals("")) parsed.add(parse[i]);
         }
-        temp.addAll(Arrays.asList(parse));
+        temp.addAll(parsed);
         return Collections.unmodifiableList(temp);
     }
     
