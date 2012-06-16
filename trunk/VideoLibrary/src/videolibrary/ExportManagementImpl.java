@@ -99,6 +99,7 @@ public class ExportManagementImpl implements ExportManagement {
 
                 odf.getTableByName("Sheet1").remove();
                 Table videoTable = Table.newTable(odf, null, null, data);
+                Table.newTable(odf);
                 videoTable.setTableName("Videos");
                 videoTable.getCellByPosition(0, 0).setStringValue("Title");
             }

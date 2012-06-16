@@ -263,7 +263,7 @@ public class AddVideoDialog extends javax.swing.JDialog {
                  * creating manually
                  */
                 video = new Video();
-                video.setTitle(getTitle());
+                video.setTitle(titleTextField.getText());
                 video.setDirectors(getTextField(directorsTextField));
                 video.setActors(getTextField(actorsTextField));
                 video.setCountries(getTextField(countryTextField));
