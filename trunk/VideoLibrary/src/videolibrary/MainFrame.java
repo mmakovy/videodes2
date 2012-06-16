@@ -8,8 +8,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,24 +16,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -638,36 +620,40 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void importFromODFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importFromODFButtonActionPerformed
         JFileChooser dialog = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("ODS files","ods");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("ODS files", "ods");
         dialog.setFileFilter(filter);
+        dialog.setMultiSelectionEnabled(true);
         int returnVal = dialog.showOpenDialog(this);
+        boolean error = false;
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             ImportManagement im = new ImportManagementImpl();
-            try {
-                im.importFromOdf(dialog.getSelectedFile());
+
+            for (File f : dialog.getSelectedFiles()) {
+                try {
+                    im.importFromOdf(f);
+                } catch (IllegalArgumentException ex) {
+                    error = true;
+                }
                 if (im.getVideos() != null) {
                     for (Video v : im.getVideos()) {
                         tableModel.addVideo(v);
                         videoManagerImpl.addVideo(v);
                     }
-                    numberOfVideosLabel.setText("" + tableModel.getRowCount());
                     if (im.getError()) {
-                        JOptionPane.showMessageDialog(this, "Some values couldn't be imported due to missing/incorrect values", "Missing/incorrect values", JOptionPane.WARNING_MESSAGE);
+                        error = true;
                     }
                 }
-            } catch (IllegalArgumentException ex) {
-                JOptionPane.showMessageDialog(this, "At least one column is missing in file " + dialog.getSelectedFile().getName(), "Missing Column", JOptionPane.ERROR_MESSAGE);
-            } catch (FileNotFoundException ex) {
-                JOptionPane.showMessageDialog(this, "File " + dialog.getSelectedFile().getName() + " not found", "File not found", JOptionPane.ERROR_MESSAGE);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "I/O Error (" + dialog.getSelectedFile().getName() + ")", "I/O Error", JOptionPane.ERROR_MESSAGE);
             }
+            if (error) {
+                JOptionPane.showMessageDialog(this, "Some videos couldn't be imported due to missing/incorrect values or missing column", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            numberOfVideosLabel.setText("" + tableModel.getRowCount());
         }
     }//GEN-LAST:event_importFromODFButtonActionPerformed
 
     private void exportToODFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportToODFButtonActionPerformed
         JFileChooser dialog = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("ODS files","ods");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("ODS files", "ods");
         dialog.setFileFilter(filter);
         int returnVal = dialog.showSaveDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
