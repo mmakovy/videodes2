@@ -96,20 +96,43 @@ public class Video {
             return false;
         }
         final Video other = (Video) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.title, other.title)) {
             return false;
         }
-        if (!Objects.equals(this.title, other.title)) {
+        if (!Objects.equals(this.directors, other.directors)) {
+            return false;
+        }
+        if (!Objects.equals(this.actors, other.actors)) {
+            return false;
+        }
+        if (this.year != other.year) {
+            return false;
+        }
+        if (!Objects.equals(this.genres, other.genres)) {
+            return false;
+        }
+        if (!Objects.equals(this.countries, other.countries)) {
+            return false;
+        }
+        if (this.rating != other.rating) {
             return false;
         }
         return true;
     }
 
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + this.id;
-        hash = 79 * hash + Objects.hashCode(this.title);
+        int hash = 5;
+        hash = 83 * hash + Objects.hashCode(this.title);
+        hash = 83 * hash + Objects.hashCode(this.directors);
+        hash = 83 * hash + Objects.hashCode(this.actors);
+        hash = 83 * hash + this.year;
+        hash = 83 * hash + Objects.hashCode(this.genres);
+        hash = 83 * hash + Objects.hashCode(this.countries);
+        hash = 83 * hash + this.rating;
         return hash;
     }
+
+
 }

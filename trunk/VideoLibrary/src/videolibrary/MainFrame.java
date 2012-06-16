@@ -627,7 +627,6 @@ public class MainFrame extends javax.swing.JFrame {
         boolean error = false;
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             ImportManagement im = new ImportManagementImpl();
-
             for (File f : dialog.getSelectedFiles()) {
                 try {
                     im.importFromOdf(f);
@@ -636,8 +635,10 @@ public class MainFrame extends javax.swing.JFrame {
                 }
                 if (im.getVideos() != null) {
                     for (Video v : im.getVideos()) {
-                        tableModel.addVideo(v);
-                        videoManagerImpl.addVideo(v);
+                        if (!tableModel.getAllVideos().contains(v)) {
+                            tableModel.addVideo(v);
+                            videoManagerImpl.addVideo(v);
+                        }
                     }
                     if (im.getError()) {
                         error = true;
