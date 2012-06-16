@@ -208,7 +208,6 @@ public class ImportManagementImpl implements ImportManagement {
             //System.err.println("At least one column is missing");
             throw new IllegalArgumentException();
         } else {
-            System.err.println(rows.getLength());
             for (int m = 1; m < rows.getLength() - 2; m++) {
 
                 boolean localError = false;
@@ -231,7 +230,7 @@ public class ImportManagementImpl implements ImportManagement {
                     localError = true;
 
                     log.error("At least one cell in row number " + (m + 1) + " is empty");
-                    //System.err.println("At least one cell in row number " + (m + 1) + " is empty");
+                    System.err.println("At least one cell in row number " + (m + 1) + " is empty");
                 } else {
                     Video video = new Video();
 
@@ -265,7 +264,6 @@ public class ImportManagementImpl implements ImportManagement {
                      */
                     
                     if (yearColumnNumber <= 256) {
-                        System.err.println(cells.item(yearColumnNumber).getFirstChild().getTextContent());
                         int year = 9999;
                         try {
                             year = Integer.parseInt(cells.item(yearColumnNumber).getFirstChild().getTextContent());
@@ -368,7 +366,7 @@ public class ImportManagementImpl implements ImportManagement {
                                 case "romance":
                                     genresList.add(Genre.ROMANCE);
                                     break;
-                                case "sci-fi":
+                                case "science_fiction":
                                     genresList.add(Genre.SCIENCE_FICTION);
                                     break;
                                 case "sport":
