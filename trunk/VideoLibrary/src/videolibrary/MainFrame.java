@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-import javax.swing.table.TableColumn;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -104,15 +104,15 @@ public class MainFrame extends javax.swing.JFrame {
 
     public MainFrame() {
         initComponents();
-        
-        final Toolkit toolkit = Toolkit.getDefaultToolkit(); final Dimension
-        screenSize = toolkit.getScreenSize();  
-        final int x = (screenSize.width - 1000) / 2; 
-        final int y = (screenSize.height - 693) / 2; 
+
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - 1000) / 2;
+        final int y = (screenSize.height - 693) / 2;
         setBounds(x, y, this.getWidth(), this.getHeight());
-        setResizable (false);
-         
-        
+        setResizable(false);
+
+
         tableModel = (VideoTableModel) videoTable.getModel();
         videoTable.removeColumn(videoTable.getColumn("Id"));
         videoManagerImpl = new VideoManagerImpl();
@@ -136,11 +136,11 @@ public class MainFrame extends javax.swing.JFrame {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        
+
         }
         getAllVideosButtonActionPerformed(null);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -562,10 +562,12 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuButtonActionPerformed
 
     private void videoTableMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_videoTableMouseMoved
-        Point p = evt.getPoint();
-        int row = videoTable.rowAtPoint(p);
-        int column = videoTable.columnAtPoint(p);
-        videoTable.setToolTipText(String.valueOf(tableModel.getValueAt(row, column)));
+        if (tableModel.getRowCount() > 0) {
+            Point p = evt.getPoint();
+            int row = videoTable.rowAtPoint(p);
+            int column = videoTable.columnAtPoint(p);
+            videoTable.setToolTipText(String.valueOf(tableModel.getValueAt(row, column)));
+        }
     }//GEN-LAST:event_videoTableMouseMoved
 
     private void addVideoMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVideoMenuButtonActionPerformed
@@ -712,6 +714,7 @@ public class MainFrame extends javax.swing.JFrame {
                 numberOfVideosLabel.setText("" + tableModel.getRowCount());
             }
         }
+        else JOptionPane.showMessageDialog(this, "No rows selected!", "No rows", JOptionPane.WARNING_MESSAGE);
     }//GEN-LAST:event_deleteVideoButtonActionPerformed
 
     private void getAllVideosButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getAllVideosButtonActionPerformed
@@ -739,14 +742,29 @@ public class MainFrame extends javax.swing.JFrame {
         dialog.setVisible(true);
         if (dialog.getResult() != null) {
             ImportManagement im = new ImportManagementImpl();
-            im.importFromOdf(new File(dialog.getResult()));
-            if (im.getVideos() != null) {
+            try {
+                im.importFromOdf(new File(dialog.getResult()));
+                if (im.getVideos() != null) {
                 for (Video v : im.getVideos()) {
                     tableModel.addVideo(v);
                     videoManagerImpl.addVideo(v);
                 }
                 numberOfVideosLabel.setText("" + tableModel.getRowCount());
+                if (im.getError()) {
+                    JOptionPane.showMessageDialog(this, "Some values couldn't be imported due to missing/incorrect values", "Missing/incorrect values", JOptionPane.WARNING_MESSAGE);
+                }
             }
+            }
+            catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "At least one column is missing in file " + dialog.getResult(), "Missing Column", JOptionPane.ERROR_MESSAGE);
+            }
+            catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, "File " + dialog.getResult() + " not found", "File not found", JOptionPane.ERROR_MESSAGE);
+            }
+            catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "I/O Error (" + dialog.getResult() + ")", "I/O Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
         }
     }//GEN-LAST:event_importFromODFButtonActionPerformed
 
@@ -765,8 +783,9 @@ public class MainFrame extends javax.swing.JFrame {
             em.setList(videoManagerImpl.getAllVideos());
             if (em.exportToOdf(new File(dialog.getResult()))) {
                 JOptionPane.showMessageDialog(this, "Successfully exported to " + dialog.getResult(), "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Export to " + dialog.getResult() + " failed", "Failed", JOptionPane.ERROR_MESSAGE);
             }
-            else JOptionPane.showMessageDialog(this, "Export to " + dialog.getResult() + " failed", "Failed", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_exportToODFButtonActionPerformed
 
@@ -779,6 +798,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_exportToODFMenuButtonActionPerformed
 
     private class GetAllVideosWorker extends SwingWorker<Integer, Video> {
+
         @Override
         protected Integer doInBackground() throws Exception {
             tableModel.removeAll();
@@ -806,11 +826,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private class GetVideosByWorker extends SwingWorker<Integer, Video> {
+
         private String search, type;
 
         public void setSearch(String search) {
             this.search = search;
         }
+
         public void setType(String type) {
             this.type = type;
         }
@@ -881,7 +903,7 @@ public class MainFrame extends javax.swing.JFrame {
                     temp.addAll(temp2);
                 }
             }
-            
+
             List<Video> result = VideoManagerImpl.removeDuplicates(temp);
             tableModel.removeAll();
             if (result.size() > 0) {
