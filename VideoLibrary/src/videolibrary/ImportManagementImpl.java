@@ -171,10 +171,12 @@ public class ImportManagementImpl implements ImportManagement {
                     break;
                 case "actors":
                 case "actor":
+                case "actor(s)":
                     actorsColumnNumber = k;
                     break;
                 case "director":
                 case "directors":
+                case "director(s)":
                     directorsColumnNumber = k;
                     break;
                 case "year":
