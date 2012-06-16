@@ -51,7 +51,7 @@ public class VideoManagerImpl implements VideoManager {
     /*
      * removes duplicate elements from list
      */
-    public static List removeDuplicates(List list) {
+    public static List<Video> removeDuplicates(List<Video> list) {
         for (int i = 0; i < list.size(); i++) {
             for (int j = 0; j < list.size(); j++) {
                 if (i == j) {

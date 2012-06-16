@@ -39,12 +39,12 @@ public class ImportManagementImpl implements ImportManagement {
     }
 
     @Override
-    public void importFromOdf(File file) throws FileNotFoundException, IOException{
+    public void importFromOdf(File file) {
         readXML(openXML(unzipper(file)));
     }
 
     @Override
-    public File unzipper(File file) throws FileNotFoundException, IOException{
+    public File unzipper(File file) {
 
         if (file == null) {
             globalError = true;
@@ -77,17 +77,17 @@ public class ImportManagementImpl implements ImportManagement {
 
 
             return new File(file.getName() + "_content.xml");
-        } /*catch (FileNotFoundException ex) {
-            error = true;
+        } catch (FileNotFoundException ex) {
+            globalError = true;
             log.error("File not found", ex);
             found = false;
             return null;
         } catch (IOException ex) {
-            error = true;
+            globalError = true;
             log.error("Error when unzipping ODS", ex);
             System.err.println("IO error");
             return null;
-        } */finally {
+        } finally {
             if (in != null) {
                 try {
                     in.close();
@@ -218,7 +218,6 @@ public class ImportManagementImpl implements ImportManagement {
                  * If one cell in row is empty, the program won't import the
                  * whole line(row).
                  */
-                
                 if (cells.item(actorsColumnNumber).getFirstChild() == null
                         || cells.item(titleColumnNumber).getFirstChild() == null
                         || cells.item(directorsColumnNumber).getFirstChild() == null
@@ -230,15 +229,15 @@ public class ImportManagementImpl implements ImportManagement {
                     localError = true;
 
                     log.error("At least one cell in row number " + (m + 1) + " is empty");
-                    System.err.println("At least one cell in row number " + (m + 1) + " is empty");
+                    //System.err.println("At least one cell in row number " + (m + 1) + " is empty");
                 } else {
                     Video video = new Video();
-
+                    
                     /**
                      * Setting TITLE
                      */
                     video.setTitle(cells.item(titleColumnNumber).getFirstChild().getTextContent());
-
+                    
                     /**
                      * Setting ACTORS
                      */
@@ -366,6 +365,7 @@ public class ImportManagementImpl implements ImportManagement {
                                 case "romance":
                                     genresList.add(Genre.ROMANCE);
                                     break;
+                                case "sci-fi":
                                 case "science_fiction":
                                     genresList.add(Genre.SCIENCE_FICTION);
                                     break;
