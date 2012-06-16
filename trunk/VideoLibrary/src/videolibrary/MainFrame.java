@@ -45,66 +45,12 @@ public class MainFrame extends javax.swing.JFrame {
     private VideoManager videoManagerImpl;
     private Context context = new Context();
 
-    /**
-     * Creates new form MainFrame
-     */
-    public static boolean checkXml() {
-        File file = new File("videolibrary.xml");
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = null;
-        try {
-            docBuilder = docFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        if (!(file.exists())) {
-            Document doc = docBuilder.newDocument();
-
-            Element rootElement = doc.createElement("Videos");
-            doc.appendChild(rootElement);
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = null;
-            try {
-                transformer = transformerFactory.newTransformer();
-            } catch (TransformerConfigurationException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(file);
-            try {
-                transformer.transform(source, result);
-            } catch (TransformerException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return true;
-        }
-
-        try {
-            Document doc = docBuilder.parse(file);
-
-            String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
-            SchemaFactory factory = SchemaFactory.newInstance(language);
-            Schema schema = factory.newSchema(new File("videoXmlSchema.xsd"));
-
-            Validator validator = schema.newValidator();
-            validator.validate(new DOMSource(doc));
-            System.out.println();
-            return true;
-        } catch (IOException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        } catch (SAXException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-
-        }
-    }
-
     public MainFrame() {
         initComponents();
 
+        /*
+         * Center the window
+         */
         final Toolkit toolkit = Toolkit.getDefaultToolkit();
         final Dimension screenSize = toolkit.getScreenSize();
         final int x = (screenSize.width - 1000) / 2;
@@ -123,10 +69,12 @@ public class MainFrame extends javax.swing.JFrame {
         } catch (BaseXException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /*
+         * if there's no collection in DB, creates a new one
+         */
         if (!a.contains("VideoDes2DB")) {
             try {
                 BaseXDriver.createCollection(context);
-
             } catch (BaseXException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
@@ -562,6 +510,9 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuButtonActionPerformed
 
     private void videoTableMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_videoTableMouseMoved
+        /*
+         * Tooltip in table
+         */
         if (tableModel.getRowCount() > 0) {
             Point p = evt.getPoint();
             int row = videoTable.rowAtPoint(p);
@@ -713,8 +664,9 @@ public class MainFrame extends javax.swing.JFrame {
                 }
                 numberOfVideosLabel.setText("" + tableModel.getRowCount());
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "No rows selected!", "No rows", JOptionPane.WARNING_MESSAGE);
         }
-        else JOptionPane.showMessageDialog(this, "No rows selected!", "No rows", JOptionPane.WARNING_MESSAGE);
     }//GEN-LAST:event_deleteVideoButtonActionPerformed
 
     private void getAllVideosButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getAllVideosButtonActionPerformed
@@ -745,26 +697,23 @@ public class MainFrame extends javax.swing.JFrame {
             try {
                 im.importFromOdf(new File(dialog.getResult()));
                 if (im.getVideos() != null) {
-                for (Video v : im.getVideos()) {
-                    tableModel.addVideo(v);
-                    videoManagerImpl.addVideo(v);
+                    for (Video v : im.getVideos()) {
+                        tableModel.addVideo(v);
+                        videoManagerImpl.addVideo(v);
+                    }
+                    numberOfVideosLabel.setText("" + tableModel.getRowCount());
+                    if (im.getError()) {
+                        JOptionPane.showMessageDialog(this, "Some values couldn't be imported due to missing/incorrect values", "Missing/incorrect values", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
-                numberOfVideosLabel.setText("" + tableModel.getRowCount());
-                if (im.getError()) {
-                    JOptionPane.showMessageDialog(this, "Some values couldn't be imported due to missing/incorrect values", "Missing/incorrect values", JOptionPane.WARNING_MESSAGE);
-                }
-            }
-            }
-            catch (IllegalArgumentException ex) {
+            } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, "At least one column is missing in file " + dialog.getResult(), "Missing Column", JOptionPane.ERROR_MESSAGE);
-            }
-            catch (FileNotFoundException ex) {
+            } catch (FileNotFoundException ex) {
                 JOptionPane.showMessageDialog(this, "File " + dialog.getResult() + " not found", "File not found", JOptionPane.ERROR_MESSAGE);
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "I/O Error (" + dialog.getResult() + ")", "I/O Error", JOptionPane.ERROR_MESSAGE);
             }
-            
+
         }
     }//GEN-LAST:event_importFromODFButtonActionPerformed
 
@@ -796,6 +745,9 @@ public class MainFrame extends javax.swing.JFrame {
     private void exportToODFMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportToODFMenuButtonActionPerformed
         exportToODFButtonActionPerformed(evt);
     }//GEN-LAST:event_exportToODFMenuButtonActionPerformed
+    /*
+     * Swingworker for getting all the videos
+     */
 
     private class GetAllVideosWorker extends SwingWorker<Integer, Video> {
 
@@ -825,6 +777,9 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
+    /*
+     * Swingworker for getting videos by parameter
+     */
     private class GetVideosByWorker extends SwingWorker<Integer, Video> {
 
         private String search, type;
@@ -886,6 +841,9 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
+    /*
+     * Swingworker for getting videos by genre
+     */
     private class GetVideosByGenreWorker extends SwingWorker<Integer, Video> {
 
         private List<Genre> genres;

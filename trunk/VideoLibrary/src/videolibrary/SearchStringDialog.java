@@ -7,11 +7,14 @@ package videolibrary;
 import javax.swing.JOptionPane;
 
 /**
+ * Represents search by string dialog
  *
  * @author Andrej
  */
 public class SearchStringDialog extends javax.swing.JDialog {
+
     String result = null;
+
     /**
      * Creates new form SearchVideoDialog
      */
@@ -19,18 +22,23 @@ public class SearchStringDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
     }
-    
+    /*
+     * sets text - to be more user friendly, because it's used for search by
+     * title, actor, director, country
+     */
+
     public void setText(String text) {
         searchLabel.setText("Enter " + text + ":");
     }
-    
+
     public void setTitleText(String text) {
         this.setTitle(text);
     }
-    
+
     public String getResult() {
         return result;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -102,9 +110,8 @@ public class SearchStringDialog extends javax.swing.JDialog {
         if (!searchTextBox.getText().equals("")) {
             result = searchTextBox.getText();
             this.dispose();
-        }
-        else {
-            JOptionPane.showMessageDialog(this, "Text field is empty","No data", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Text field is empty", "No data", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_OKButtonActionPerformed
 

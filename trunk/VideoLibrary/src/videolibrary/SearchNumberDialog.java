@@ -7,11 +7,14 @@ package videolibrary;
 import javax.swing.JOptionPane;
 
 /**
+ * Represents dialog which should return integer
  *
  * @author Andrej
  */
 public class SearchNumberDialog extends javax.swing.JDialog {
+
     int result = -1;
+
     /**
      * Creates new form SearchIntDialog
      */
@@ -19,14 +22,19 @@ public class SearchNumberDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
     }
-    
+
     public int getResult() {
         return result;
     }
-    
+
+    /*
+     * set text - to be more user friendly, because it's used for searching by
+     * id, year
+     */
     public void setText(String text) {
         searchLabel.setText("Enter " + text + ":");
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -96,22 +104,19 @@ public class SearchNumberDialog extends javax.swing.JDialog {
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
         if (textField.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Search field is empty","No data", JOptionPane.ERROR_MESSAGE);
-        }
-        else {
+            JOptionPane.showMessageDialog(this, "Search field is empty", "No data", JOptionPane.ERROR_MESSAGE);
+        } else {
             try {
                 result = Integer.parseInt(textField.getText());
                 if (result > 0) {
                     this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Number should be greater than zero", "Wrong number", JOptionPane.ERROR_MESSAGE);
                 }
-                else {
-                    JOptionPane.showMessageDialog(this, "Number should be greater than zero","Wrong number", JOptionPane.ERROR_MESSAGE);
-                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Given text is not a number", "No number", JOptionPane.ERROR_MESSAGE);
             }
-            catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Given text is not a number","No number", JOptionPane.ERROR_MESSAGE);
-            }
-        } 
+        }
     }//GEN-LAST:event_OKButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed

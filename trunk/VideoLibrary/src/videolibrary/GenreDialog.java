@@ -10,11 +10,14 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
+ * Represents genre selection dialog
  *
  * @author Andrej
  */
 public class GenreDialog extends javax.swing.JDialog {
+
     List<Genre> genres = new ArrayList<Genre>();
+
     /**
      * Creates new form GenreDialog
      */
@@ -26,6 +29,7 @@ public class GenreDialog extends javax.swing.JDialog {
     public List<Genre> getGenres() {
         return Collections.unmodifiableList(genres);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -215,96 +219,100 @@ public class GenreDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void OkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OkButtonActionPerformed
-        boolean pressed = false;
+        boolean checked = false;
+        /*
+         * add selected genres into list
+         */
         if (ActionCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.ACTION);
         }
         if (AdventureCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.ADVENTURE);
         }
         if (AnimationCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.ANIMATION);
         }
         if (BiographyCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.BIOGRAPHY);
         }
         if (ComedyCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.COMEDY);
         }
         if (CrimeCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.CRIME);
         }
         if (DocumentaryCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.DOCUMENTARY);
         }
         if (DramaCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.DRAMA);
         }
         if (FamilyCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.FAMILY);
         }
         if (FantasyCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.FANTASY);
         }
         if (HistoryCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.HISTORY);
         }
         if (HorrorCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.HORROR);
         }
         if (MusicCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.MUSIC);
         }
         if (MusicalCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.MUSICAL);
         }
         if (MysteryCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.MYSTERY);
         }
         if (RomanceCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.ROMANCE);
         }
         if (ScifiCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.SCIENCE_FICTION);
         }
         if (SportCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.SPORT);
         }
         if (ThrillerCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.THRILLER);
         }
         if (WarCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.WAR);
         }
         if (WesternCB.isSelected()) {
-            pressed = true;
+            checked = true;
             genres.add(Genre.WESTERN);
         }
-        
-        if (!pressed) {
-            JOptionPane.showMessageDialog(this, "No genres selected","No genres", JOptionPane.ERROR_MESSAGE);
-        }
-        else {
+        /*
+         * if no genres selected
+         */
+        if (!checked) {
+            JOptionPane.showMessageDialog(this, "No genres selected", "No genres", JOptionPane.ERROR_MESSAGE);
+        } else {
             this.dispose();
         };
     }//GEN-LAST:event_OkButtonActionPerformed

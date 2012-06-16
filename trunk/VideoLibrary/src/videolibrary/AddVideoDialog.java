@@ -5,18 +5,20 @@
 package videolibrary;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 
 /**
+ * Represents add video dialog
  *
  * @author Andrej
  */
 public class AddVideoDialog extends javax.swing.JDialog {
+
     private ButtonGroup bg = new ButtonGroup();
     private Video video = null;
+
     /**
      * Creates new form AddVideoDialog
      */
@@ -28,15 +30,19 @@ public class AddVideoDialog extends javax.swing.JDialog {
         initList();
     }
 
+    /*
+     * Initialization of genre list
+     */
     public void initList() {
-        for (Genre g: Genre.values()) {
-            ((DefaultListModel)(genresListLeft.getModel())).addElement(g);
+        for (Genre g : Genre.values()) {
+            ((DefaultListModel) (genresListLeft.getModel())).addElement(g);
         }
     }
-    
+
     public Video getVideo() {
         return video;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -240,47 +246,51 @@ public class AddVideoDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (checkValues()) {
+            /*
+             * importing from IMDB
+             */
             if (imdbImportRadioButton.isSelected()) {
                 ImdbDownloader imdbd = new ImdbDownloaderImpl();
                 if (imdbd.download(titleTextField.getText())) {
                     video = imdbd.getVideo();
                     video.setCountries(getTextField(countryTextField));
                     this.dispose();
-                } 
-                else {
-                    JOptionPane.showMessageDialog(this, "No video with title " + titleTextField.getText() + "found on IMDB","Not found", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No video with title " + titleTextField.getText() + "found on IMDB", "Not found", JOptionPane.ERROR_MESSAGE);
                 }
+            } else {
+                /*
+                 * creating manually
+                 */
+                video = new Video();
+                video.setTitle(getTitle());
+                video.setDirectors(getTextField(directorsTextField));
+                video.setActors(getTextField(actorsTextField));
+                video.setCountries(getTextField(countryTextField));
+                video.setYear(getInt(yearComboBox));
+                video.setRating(getInt(ratingComboBox));
+                video.setGenres(getGenres());
+                this.dispose();
             }
-            else {
-               video = new Video();
-               video.setTitle(getTitle());
-               video.setDirectors(getTextField(directorsTextField));
-               video.setActors(getTextField(actorsTextField));
-               video.setCountries(getTextField(countryTextField));
-               video.setYear(getInt(yearComboBox));
-               video.setRating(getInt(ratingComboBox));
-               video.setGenres(getGenres());
-               this.dispose();
-            }
-            
+
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void genresListLeftMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_genresListLeftMouseClicked
         int index = genresListLeft.getSelectedIndex();
         if (index != -1) {
-            Genre g = (Genre) ((DefaultListModel)(genresListLeft.getModel())).getElementAt(index);
-            ((DefaultListModel)(genresListLeft.getModel())).remove(index);
-            ((DefaultListModel)(genresListRight.getModel())).addElement(g); 
+            Genre g = (Genre) ((DefaultListModel) (genresListLeft.getModel())).getElementAt(index);
+            ((DefaultListModel) (genresListLeft.getModel())).remove(index);
+            ((DefaultListModel) (genresListRight.getModel())).addElement(g);
         }
     }//GEN-LAST:event_genresListLeftMouseClicked
 
     private void genresListRightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_genresListRightMouseClicked
         int index = genresListRight.getSelectedIndex();
         if (index != -1) {
-            Genre g = (Genre) ((DefaultListModel)(genresListRight.getModel())).getElementAt(index);
-            ((DefaultListModel)(genresListRight.getModel())).remove(index);
-            ((DefaultListModel)(genresListLeft.getModel())).addElement(g); 
+            Genre g = (Genre) ((DefaultListModel) (genresListRight.getModel())).getElementAt(index);
+            ((DefaultListModel) (genresListRight.getModel())).remove(index);
+            ((DefaultListModel) (genresListLeft.getModel())).addElement(g);
         }
     }//GEN-LAST:event_genresListRightMouseClicked
 
@@ -295,6 +305,9 @@ public class AddVideoDialog extends javax.swing.JDialog {
     private void imdbImportRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imdbImportRadioButtonActionPerformed
         changeState(false);
     }//GEN-LAST:event_imdbImportRadioButtonActionPerformed
+    /*
+     * Enable/disable text fields
+     */
 
     public void changeState(boolean state) {
         directorsTextField.setEnabled(state);
@@ -304,71 +317,79 @@ public class AddVideoDialog extends javax.swing.JDialog {
         genresListLeft.setEnabled(state);
         genresListRight.setEnabled(state);
     }
-    
+
     /**
-     * @param args the command line arguments
+     * Checks whether all values are correct or not
      */
-    public boolean checkValues() {  
+    public boolean checkValues() {
         if (imdbImportRadioButton.isSelected()) {
+            /*
+             * if importing from IMDB, it checks just the title and countries
+             */
             if (titleTextField.getText().equals("")) {
-               JOptionPane.showMessageDialog(this, "Title field is empty","No title", JOptionPane.ERROR_MESSAGE);
-               return false;
+                JOptionPane.showMessageDialog(this, "Title field is empty", "No title", JOptionPane.ERROR_MESSAGE);
+                return false;
             }
             if (countryTextField.getText().equals("")) {
-               JOptionPane.showMessageDialog(this, "Countries field is empty","No coutries", JOptionPane.ERROR_MESSAGE);
-               return false;
+                JOptionPane.showMessageDialog(this, "Countries field is empty", "No coutries", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
+        } else {
+            /*
+             * else check all the attributes
+             */
+            if (titleTextField.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Empty title", "No title", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if (directorsTextField.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Directors field is empty", "No directors", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if (actorsTextField.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Actors field is empty", "No actors", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if (countryTextField.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Countries field is empty", "No coutries", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if (genresListRight.getModel().getSize() == 0) {
+                JOptionPane.showMessageDialog(this, "No genres selected", "No genres", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if (getTextField(directorsTextField).isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Directors field is not valid", "No directors", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if (getTextField(actorsTextField).isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Actors field is not valid", "No actors", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if (getTextField(countryTextField).isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Countries field is not valid", "No countries", JOptionPane.ERROR_MESSAGE);
+                return false;
             }
             return true;
         }
-        else {
-           if (titleTextField.getText().equals("")) {
-               JOptionPane.showMessageDialog(this, "Empty title","No title", JOptionPane.ERROR_MESSAGE);
-               return false;
-           }
-           if (directorsTextField.getText().equals("")) {
-               JOptionPane.showMessageDialog(this, "Directors field is empty","No directors", JOptionPane.ERROR_MESSAGE);
-               return false;
-           }
-           if (actorsTextField.getText().equals("")) {
-               JOptionPane.showMessageDialog(this, "Actors field is empty","No actors", JOptionPane.ERROR_MESSAGE);
-               return false;
-           }
-           if (countryTextField.getText().equals("")) {
-               JOptionPane.showMessageDialog(this, "Countries field is empty","No coutries", JOptionPane.ERROR_MESSAGE);
-               return false;
-           }
-           if (genresListRight.getModel().getSize() == 0) {
-               JOptionPane.showMessageDialog(this, "No genres selected","No genres", JOptionPane.ERROR_MESSAGE);
-               return false;
-           }
-           if (getTextField(directorsTextField).isEmpty()) {
-               JOptionPane.showMessageDialog(this, "Directors field is not valid","No directors", JOptionPane.ERROR_MESSAGE);
-               return false;
-           }
-           if (getTextField(actorsTextField).isEmpty()) {
-               JOptionPane.showMessageDialog(this, "Actors field is not valid","No actors", JOptionPane.ERROR_MESSAGE);
-               return false;
-           }
-           if (getTextField(countryTextField).isEmpty()) {
-               JOptionPane.showMessageDialog(this, "Countries field is not valid","No countries", JOptionPane.ERROR_MESSAGE);
-               return false;
-           }
-           return true;
-        }
     }
-    
-    public String getTitle() {
-        return titleTextField.getText();
-    }
-    
+
+    /*
+     * get genres from genre list
+     */
     public List<Genre> getGenres() {
         List<Genre> temp = new ArrayList<Genre>();
         for (int i = 0; i < genresListRight.getModel().getSize(); i++) {
-            Genre g = (Genre)((DefaultListModel)genresListRight.getModel()).get(i);
+            Genre g = (Genre) ((DefaultListModel) genresListRight.getModel()).get(i);
             temp.add(g);
         }
         return temp;
     }
+
+    /*
+     * Parses all elements from text field into list
+     */
     public List<String> getTextField(JTextField tf) {
         List<String> temp = new ArrayList<String>();
         String input = tf.getText();
@@ -376,21 +397,26 @@ public class AddVideoDialog extends javax.swing.JDialog {
         List<String> parsed = new ArrayList<String>();
         for (int i = 0; i < parse.length; i++) {
             parse[i] = parse[i].trim();
-            if (!parse[i].equals("")) parsed.add(parse[i]);
+            if (!parse[i].equals("")) {
+                parsed.add(parse[i]);
+            }
         }
         temp.addAll(parsed);
         return Collections.unmodifiableList(temp);
     }
-    
+
+    /*
+     * parses integer from combobox
+     */
     public int getInt(JComboBox cb) {
         int result = 0;
         try {
-            result = Integer.parseInt((String)cb.getSelectedItem());
+            result = Integer.parseInt((String) cb.getSelectedItem());
+        } catch (NumberFormatException ex) {
         }
-        catch (NumberFormatException ex) {}
         return result;
     }
-    
+
     public static void main(String args[]) {
         /*
          * Set the Nimbus look and feel
