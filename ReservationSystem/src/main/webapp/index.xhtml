@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Login Page</title> 
+        
+    </h:head>
+    <h:body>
+        <div id="container">
+            <div id="content">
+                <rich:panel header="Please login to continue" style="width: 300px; margin-left: auto; margin-right: auto;">
+                    <h:form id="LoginForm">
+                        <table>
+                            <tr>
+                                <td><h:outputText value="Enter Login: " /></td>
+                                <td>
+                                    <h:inputText size="32" id="login" value="#{userBean.userName}" required="true">
+                                        <f:validateLength minimum="1"/>
+                                    </h:inputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><h:outputText value="Enter Password: " /></td>
+                                <td>
+                                    <h:inputSecret size="32" id="password" value="#{userBean.password}" required="true">
+                                        <f:validateLength minimum="1"/>
+                                    </h:inputSecret>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="width: 100%"><center><a4j:commandButton value="Login" action="#{userBean.login}"/></center></td>
+                            </tr>
+                            <tr>                    
+                            </tr>
+                        </table>
+                    </h:form>
+                </rich:panel>
+                <rich:message for="login"/>
+                <rich:message for="password"/>
+            </div>
+        </div>
+    </h:body>
+</html>
